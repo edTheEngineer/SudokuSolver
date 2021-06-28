@@ -1,0 +1,424 @@
+﻿@page
+
+@model SudokuModel
+@{
+    ViewData["Title"] = "Home page";
+    bool isSelectedCell = Model.SessionInfoSelectedI!= "-" && Model.SessionInfoSelectedJ !="-";
+    string isNumber = "";
+    bool showNumber=true;
+   if(Model.SessionInfoIsNumber =="False")
+{
+showNumber=false;
+isNumber ="checked";
+}
+
+else
+
+{
+showNumber=true;
+isNumber="";
+}
+
+    var additionalFeatures = 3 < 2;
+}
+
+@functions {
+    public string GetClassForSelectedCells(int i, int j)
+    {
+        string classes  ="";
+        if (i.ToString() == Model.SessionInfoSelectedI && Model.SessionInfoSelectedJ == j.ToString())
+        {
+            classes = "cellSelected";
+        }
+
+        return classes;
+
+    }
+
+    public string showNumberOrCandidates(int i, int j)
+    {
+        var c = Model.Grid.Rows[i].Cells[j];
+        string output;
+        if(c.Number ==0 || c.Number ==null)
+        {
+            output = printPossibilities(c.Possibilities);
+        }
+
+        else
+        {
+            output = c.Number.ToString();
+        }
+
+        return output;
+    }
+
+    public string formatNumberOfCandidates(int i, int j)
+    {
+        var c = Model.Grid.Rows[i].Cells[j];
+        string output;
+        if (c.Number == 0 || c.Number == null)
+        {
+            output = "sudokuPossibilities";
+        }
+
+        else
+        {
+            output = "NotSolved";
+        }
+
+        return output;
+    }
+    public string printPossibilities(List<int> possibilities)
+    {
+        var x = "";
+
+        foreach (var a in possibilities)
+        {
+            x += a;
+        }
+        return x;
+    }
+
+    public string GetClassForSolvedCells(int i, int j)
+    {
+        var isOriginal = Model.Grid.Rows[i].Cells[j].IsOriginalValue;
+        if(isOriginal)
+        {
+
+            return "original";
+
+        }
+
+        else
+        {
+            if (Model.SessionInfoSolved != "True")
+            {
+                return formatNumberOfCandidates(i, j);
+            }
+
+            else
+
+            {
+                return "nonOriginal";
+            }
+        }
+
+
+    }
+}
+
+<head>
+    <script src="https://use.fontawesome.com/a559fe1d35.js"></script>
+</head><!--- Font Awesome JS-->
+
+<div class="text-center">
+    <h1 class="display-4">Sudoku Solver</h1>
+
+    <form method="post">
+
+
+        <section id="grid" class="row tableGrid">
+            <div class="left">
+                @if (isSelectedCell)
+                        {
+
+                @if(showNumber)
+                {
+                <div id="numbersToSelect" class="numbersToSelect">
+
+                    <table id="numbersToSelectTable" class="sudokuGrid">
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr>
+
+                            <td><button class="SelectNumber" type="submit" asp-route-num="1" asp-page-handler="SelectNumber">1</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-route-num="2" asp-page-handler="SelectNumber">2</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-route-num="3" asp-page-handler="SelectNumber">3</button></td>
+                        </tr>
+                        <tr>
+                            <td><button class="SelectNumber" type="submit" asp-route-num="4" asp-page-handler="SelectNumber">4</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-route-num="5" asp-page-handler="SelectNumber">5</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-route-num="6" asp-page-handler="SelectNumber">6</button></td>
+                        </tr>
+                        <tr>
+                            <td><button class="SelectNumber" type="submit" asp-route-num="7" asp-page-handler="SelectNumber">7</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-route-num="8" asp-page-handler="SelectNumber">8</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-route-num="9" asp-page-handler="SelectNumber">9</button></td>
+                        </tr>
+                    </table>
+                    <div><button class="RemoveNumber" type="submit" asp-route-num="0" asp-route-isSingle="true" asp-page-handler="SelectNumber">Remove Number</button></div>
+                    <div> <span>Numbers to Select</span></div>
+
+                </div>
+                }
+
+                else
+
+                {
+                <div id="possibilitiesToSelect" class="numbersToSelect">
+
+                    <table id="possibilitiesToSelectTable" class="sudokuGrid">
+                        <tr>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="1">1</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="2">2</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="3">3</button></td>
+                        </tr>
+                        <tr>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="4">4</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="5">5</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="6">6</button></td>
+                        </tr>
+                        <tr>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="7">7</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="8">8</button></td>
+                            <td><button class="SelectNumber" type="submit" asp-page-handler="SelectPossibility" asp-route-possibility="9">9</button></td>
+                        </tr>
+                    </table>
+                    <div><button class="RemoveNumber" type="submit" asp-route-num="0" asp-route-possibility="0" asp-page-handler="SelectPossibility">Remove Number</button></div>
+                    <span>Possibilities to Select</span>
+                </div>
+                }
+
+
+                        }
+            </div>
+            <div class="middle">
+                <table id="sudokuGrid" class="mainGrid">
+                    <!--Main Sudoku grid with Labels-->
+                    <tr>
+                        <td></td>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>E</td>
+                        <td>F</td>
+                        <td>G</td>
+                        <td>H</td>
+                        <td>I</td>
+                    </tr>
+
+                    @for (int i = 0; i < 9; i++)
+                        {
+                    <tr>
+                        <td>@(i+1)</td>
+                        @for (int j = 0; j < 9; j++)
+                                {
+
+                                    if ((i == 2 || i == 5) && (j == 2 || j == 5))
+                                    {
+                        <td class="thirdColumnRow"><button class="sudokuButton @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)" asp-page-handler="SelectCell" asp-route-i="@i" asp-route-j="@j" type="submit"> @showNumberOrCandidates(i,j)</button></td>
+                                    }
+
+                                    else if (i == 2 || i == 5)
+
+                                    {
+                        <td class="thirdRow"><button class="sudokuButton  @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)" asp-page-handler="SelectCell" asp-route-i="@i" asp-route-j="@j" type="submit">@showNumberOrCandidates(i, j)  </button></td>
+                                    }
+
+                                    else if (j == 2 || j == 5)
+
+                                    {
+                        <td class="thirdColumn"><button asp-page-handler="SelectCell" asp-route-i="@i" asp-route-j="@j" class="sudokuButton @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)" type="submit">@showNumberOrCandidates(i, j) </button></td>
+                                    }
+
+                                    else
+
+                                    {
+                        <td><button asp-page-handler="SelectCell" asp-route-i="@i" asp-route-j="@j" class="sudokuButton  @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)" type="submit">@showNumberOrCandidates(i,j) </button></td>
+                                    }
+
+                                }
+
+                    </tr>
+                        }
+                </table>
+            </div>
+            @if (additionalFeatures) //Disabled as not needed
+                {
+            <div class="right">
+                <input type="radio" id="singleCell" name="cellSelect" checked="checked" onclick="ShowHideDivSingleMulti()" /><label for="cellSelect"> Single Cell</label>
+                <input type="radio" id="multiCell" name="cellSelect" onclick="ShowHideDivSingleMulti()" /><label for="cellSelect"> Multi Cell</label>
+            </div>
+
+            <div style="display:none;" id="singleCellHide">
+                <span>Single Cell Selected</span>
+            </div>
+            <div style="display:none;" id="singleCellShow">
+                <span>Multi Cell Selected</span>
+            </div>
+                }
+
+                else
+
+                {
+            <div class="right"></div>
+                }
+
+        </section>
+    <section>
+        <div id="numbers" class="row">
+
+            <div class="left">
+                   
+            </div>
+            <div class="middle">
+                @if(isSelectedCell)
+                {
+                <p id="Notes">
+                    <span>Notes</span>
+                    <i class="fa fa-pencil"></i>
+                    <label class="switch">
+                        <input id="notesCheck" type="checkbox" @isNumber onclick="ShowHideDivSingleNotesOnOff()">
+                        <span class="slider round"></span>
+                        <input class="hidden" id="hiddenNotesCheck" asp-page-handler="ShowNumbersOrPossibilities" type="submit" />
+
+                    </label>
+                </p>
+
+               
+                }
+
+                @if (isSelectedCell && additionalFeatures)
+                {
+
+                <p id="colours">
+                    <label for="colours">Choose a colour:</label>
+                    <select name="colours" id="colours">
+                        <option class="Red" value="Red">Red</option>
+                        <option class="Yellow" value="Yellow">Yellow</option>
+                        <option class="Orange" value="Orange">Orange</option>
+                        <option class="Green" value="Green">Green</option>
+                        <option class="Purple" value="Purple">Purple</option>
+                        <option class="Pink" value="Pink">Pink</option>
+                        <option class="Brown" value="Brown">Brown</option>
+                        <option class="Black" value="Black">Black</option>
+                    </select>
+                </p>
+                }
+
+            </div>
+            <div class="right"> </div>
+        </div>
+
+    </section>
+    
+    <section>
+        <div class="left"></div>
+        <div class="middle">
+
+
+        </div>
+ 
+        <div class="right"></div>
+    </section>
+
+    <div class="row marginTop">
+            <div class="left"></div>
+            <div class="middle">
+                <p>
+                    <button type="submit" class="btn-primary" asp-page-handler="SolveSudoku"> Solve Sudoku</button>
+                    <button asp-page-handler="ClearSudoku" type="submit"> Clear Sudoku</button>
+                </p>
+            </div>
+            <div class="right"></div>
+        </div>
+        <div class="row">
+            <div class="left"></div>
+            <div class="middle">
+                <p>
+                    <button type="submit" class="btn-primary" asp-page-handler="IsValidSudoku"> Is Valid</button>
+                </p>
+            </div>
+            <div class="right"></div>
+        </div>
+        @if (additionalFeatures)
+            {
+        <section id="Explanation" class="Explanation">
+            <p> <h2>Explanation</h2></p>
+            <ul>
+                <li>Do this and this</li>
+                <li>Do that and that</li>
+                <li>Do x and y</li>
+                <li>Do a and b and c</li>
+            </ul>
+        </section>
+            }
+
+        @if (additionalFeatures)
+            {
+        <div class="row">
+            <div class="left"></div>
+            <div class="middle">
+                <p>
+                    <input asp-for="CellsToSolve" /> <button asp-for="CellsToSolve" asp-page-handler="SolveNextEntries">Solve Next Entries</button>
+                </p>
+            </div>
+            <div class="right"></div>
+        </div>
+            }
+
+
+        @if (additionalFeatures)
+            {
+        <div class="row">
+            <div class="left"></div>
+            <div class="middle">
+                <p>
+                    <button asp-page-handler="SolveSelectedCells" type="submit" class="btn-primary"> Solve Selected Cells</button>
+                </p>
+            </div>
+            <div class="right"> </div>
+        </div>
+            }
+
+        <section id="SudokuResuts" class="Explanation">
+            @if (@Model.SessionInfoSolved == "True")
+            {
+            <div>
+                <span>This sudoku has been solved!</span>
+            </div>
+            }
+
+            else
+
+            {
+                if (@Model.SessionInfoIsMinimum == "True")
+                {
+            <div>
+                <span>
+                    This sudoku cannot be solved.
+                </span>
+            </div>
+
+                }
+
+                else
+
+                {
+            <div>
+                <span>
+                    Please enter at least 17 numbers. Please enter more givens.
+                </span>
+            </div>
+                }
+            }
+
+
+        </section>
+        @if (additionalFeatures)
+            {
+        <section id="Explanation" class="Explanation">
+            <p> <h2>Explanation</h2></p>
+            <ul>
+                <li>Do this and this</li>
+                <li>Do that and that</li>
+                <li>Do x and y</li>
+                <li>Do a and b and c</li>
+            </ul>
+        </section>
+            }
+
+    </form>
+</div>

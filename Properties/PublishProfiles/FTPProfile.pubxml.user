@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAoy47v2vxJUu/zokJ1tnYxQAAAAACAAAAAAAQZgAAAAEAACAAAAAY6wxluhB78wEZA8C72g/JxmmvSde5ZcZSISdaHFWY1QAAAAAOgAAAAAIAACAAAABwaFWt/e+QFmP26neHXkkC2MZRIqK3Ua03V8MQ9C0LvSAAAACQczF2DEZL5AmY27sUFM62EJhH3FC8xFwZNdnPHYRkmUAAAADRiygr0Md1O5YqypEuWc7Pba9JxJlyl4P8Qg5guDZ+/WqbD0KyGfXfnChZ4eGfVdbhRZ5Iu1I06i2YpBebecwW</EncryptedPassword>
+    <_PublishTargetUrl>ftp://access873091040.webspace-data.io</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="appsettings.Development.json">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="appsettings.json">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="AutoMapper.dll">
+      <publishTime>10/16/2020 15:36:54</publishTime>
+    </File>
+    <File Include="Microsoft.Web.Infrastructure.dll">
+      <publishTime>07/25/2012 11:48:56</publishTime>
+    </File>
+    <File Include="Newtonsoft.Json.dll">
+      <publishTime>03/17/2021 20:03:36</publishTime>
+    </File>
+    <File Include="Pages/Web.Config">
+      <publishTime>05/26/2021 15:17:41</publishTime>
+    </File>
+    <File Include="RazorPagesSudoku.deps.json">
+      <publishTime>06/25/2021 11:53:51</publishTime>
+    </File>
+    <File Include="RazorPagesSudoku.dll">
+      <publishTime>06/25/2021 11:53:47</publishTime>
+    </File>
+    <File Include="RazorPagesSudoku.exe">
+      <publishTime>06/25/2021 11:53:47</publishTime>
+    </File>
+    <File Include="RazorPagesSudoku.pdb">
+      <publishTime>06/25/2021 11:53:47</publishTime>
+    </File>
+    <File Include="RazorPagesSudoku.runtimeconfig.json">
+      <publishTime>06/15/2021 15:50:06</publishTime>
+    </File>
+    <File Include="RazorPagesSudoku.Views.dll">
+      <publishTime>06/25/2021 11:53:51</publishTime>
+    </File>
+    <File Include="RazorPagesSudoku.Views.pdb">
+      <publishTime>06/25/2021 11:53:51</publishTime>
+    </File>
+    <File Include="System.Web.Helpers.dll">
+      <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="System.Web.Mvc.dll">
+      <publishTime>11/28/2018 12:59:46</publishTime>
+    </File>
+    <File Include="System.Web.Razor.dll">
+      <publishTime>11/28/2018 13:00:12</publishTime>
+    </File>
+    <File Include="System.Web.WebPages.Deployment.dll">
+      <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="System.Web.WebPages.dll">
+      <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="System.Web.WebPages.Razor.dll">
+      <publishTime>11/28/2018 13:04:24</publishTime>
+    </File>
+    <File Include="web.config">
+      <publishTime>06/25/2021 11:54:57</publishTime>
+    </File>
+    <File Include="wwwroot/css/site.css">
+      <publishTime>06/16/2021 14:43:24</publishTime>
+    </File>
+    <File Include="wwwroot/favicon.ico">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="wwwroot/js/site.js">
+      <publishTime>06/16/2021 09:52:49</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css.map">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css.map">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css.map">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.css">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.css.map">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.min.css">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap.min.css.map">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.js.map">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.min.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/bootstrap/LICENSE">
+      <publishTime>05/06/2021 11:57:30</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation-unobtrusive/LICENSE.txt">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/dist/additional-methods.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/dist/additional-methods.min.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/dist/jquery.validate.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/dist/jquery.validate.min.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery-validation/LICENSE.md">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery/dist/jquery.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery/dist/jquery.min.js">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery/dist/jquery.min.map">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+    <File Include="wwwroot/lib/jquery/LICENSE.txt">
+      <publishTime>05/06/2021 11:57:31</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

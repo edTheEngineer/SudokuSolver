@@ -1,0 +1,236 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+input {
+    width: 40px;
+}
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: orange;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem #000000;
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+.Explanation{
+border:2px solid darkblue;
+border-radius:15px;
+}
+
+.numbersToSelect{
+    border: 2px solid orange;
+    border-radius:15px;
+}
+
+.row {
+    display: flex;
+}
+
+.tableGrid {
+    table-layout: fixed;
+}
+
+.mainGrid{
+    margin-left:30%;
+}
+
+.sudokuGrid {
+    margin-left:32%;
+}
+ /* The switch - the box around the slider */
+    .switch{
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+        border-radius: 50%;
+}
+
+.Red{
+        background-color:red;
+}
+
+.Orange {
+    background-color: orange;
+}
+
+.Yellow {
+    background-color: yellow;
+}
+
+.Green {
+    background-color: lawngreen;
+}
+
+.Purple {
+    background-color: mediumpurple;
+}
+
+.Pink {
+    background-color: deeppink;
+}
+
+.Brown {
+    background-color: brown;
+}
+
+.Black {
+    background-color: black;
+}
+
+.sudokuButton {
+    background-color: white;
+    border: 0.5px solid grey;
+}
+
+.thirdRow{
+border-bottom: 5px solid cornflowerblue;
+}
+
+.thirdColumn {
+    border-right: 5px solid cornflowerblue;
+}
+
+.thirdColumnRow {
+    border-bottom: 5px solid cornflowerblue;
+    border-right: 5px solid cornflowerblue;
+}
+
+.left {
+    flex: 25%;
+}
+
+.middle {
+    flex: 50%;
+}
+
+.right {
+    flex: 25%;
+}
+
+.marginTop{
+    margin-top:10px;
+}
+
+.SelectNumber {
+    color: greenyellow;
+}
+
+.SelectPossibility {
+    color: orange;
+}
