@@ -242,9 +242,13 @@ border-bottom: 5px solid cornflowerblue;
 .RemoveNumber {
     color: black;
     background: lightgoldenrodyellow;
+    margin-left:20px;
 
 }
-
+.SkipNumber{
+    margin-top:-40px;
+    margin-bottom:10px;
+}
 .hidden{
     display:none;
 }
@@ -260,6 +264,7 @@ border-bottom: 5px solid cornflowerblue;
 .nonOriginal {
     font-size: 30px;
     color: orange;
+    font-weight:bold;
 }
 
 
@@ -268,7 +273,7 @@ border-bottom: 5px solid cornflowerblue;
     height: 50px;
     padding-left: 10px;
     padding-right: 10px;
-    line-height: 15px;
+    line-height: 14px;
     line-break: normal;
     word-break: break-word;
     overflow: hidden;
@@ -279,10 +284,40 @@ border-bottom: 5px solid cornflowerblue;
     font-size: 30px;
 }
 
-@media screen and (device-width: 360px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) 
+.invalidSudoku{
+    background-color:red;
+    color: white;
+    font-size:18px;
+    padding:10px;
+}
 
-{
-   .sudokuButton{
+.rowIntersect{
+    background-color:aliceblue;
+}
+
+.columnIntersect {
+    background-color: lightgoldenrodyellow;
+}
+
+.blockIntersect {
+    background-color: palegreen;
+}
+
+.allIntersect {
+    background-color: #ffe6ff;
+}
+
+.showPossibilities{
+    font-weight:bolder;
+    color:red;
+}
+
+.highlight{
+    border:2px solid green:
+}
+
+@media screen and (device-width: 360px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) {
+    .sudokuButton{
        width:45px;
        height:45px;
 

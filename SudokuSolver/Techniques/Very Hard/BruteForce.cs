@@ -10,7 +10,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         //My Solution
 
-        private List<int> createCellsToAdd()
+        private List<int> CreateCellsToAdd()
         {
             List<int> filledInCells = new List<int>();
             for (int i = 1; i <= 81; i++)
@@ -23,14 +23,14 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             }
             return filledInCells;
         }
-        public bool isIndexInList(int index, List<int> filledInCells)
+        public bool IsIndexInList(int index, List<int> filledInCells)
         {
             var i = filledInCells.FindIndex(x => x == index);
 
             return i >= 0;
         }
 
-        public void incrementAfterPlacingNumber(int index, out int start, out bool isBackTrack, out int indexOut)
+        public void IncrementAfterPlacingNumber(int index, out int start, out bool isBackTrack, out int indexOut)
         {
             index += 1;
             start = 1;
@@ -38,33 +38,33 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             indexOut = index;
         }
 
-        public void backTrack(List<int> cells, int index, out bool isBackTrack, out int start, out int indexOut)
+        public void BackTrack(List<int> cells, int index, out bool isBackTrack, out int start, out int indexOut)
         {
             start = 1;
             isBackTrack = true;
             index -= 1;
             for (; index >= 1; index -= 1)
             {
-                if (isIndexInList(index, cells))
+                if (IsIndexInList(index, cells))
                 {
                     Grid.GetCoOrdinatesOfCell(index, out int a, out int b);
                     int currentCellVal = Grid.SudokuGrid[a, b];
                     int nextVal = currentCellVal + 1;
                     if (currentCellVal == 9)
                     {
-                        undoNumber(cells, index);
+                        UndoNumber(cells, index);
                     }
 
-                    else if (canPlaceNumberInCell(false, a, b, nextVal))
+                    else if (CanPlaceNumberInCell(false, a, b, nextVal))
                     {
-                        canPlaceNumberInCell(true, a, b, nextVal);
+                        CanPlaceNumberInCell(true, a, b, nextVal);
                         isBackTrack = false;
                         break;
                     }
 
                     else
                     {
-                        undoNumber(cells, index);
+                        UndoNumber(cells, index);
                     }
 
                 }
@@ -76,23 +76,22 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         }
 
-        private void undoNumber(List<int> cells, int index)
+        private void UndoNumber(List<int> cells, int index)
         {
             Grid.GetCoOrdinatesOfCell(index, out int x, out int y);
 
             var isIndex = cells.FindIndex(x => x == index);
             if (isIndex >= 0)
             {
-                Grid.SetNumber(x, y, 0);
+                Grid.SetNumberRemovePossibilities(x, y, 0, "");
             }
 
             else
             {
             }
         }
-        public void skipNumberAndProgress(int index, bool isBacktrack, out int indexOut, out bool isBack)
+        public void SkipNumberAndProgress(int index, bool isBacktrack, out int indexOut, out bool isBack)
         {
-            Grid.GetCoOrdinatesOfCell(index, out int x, out int y);
             isBack = isBacktrack;
             if (isBacktrack)
             {
@@ -104,34 +103,34 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                 indexOut = index + 1;
             }
         }
-        private void solveAllSudoku(bool isBackTrack, List<int> cells, int index, int start, int currentIteration)
+        private void SolveAllSudoku(bool isBackTrack, List<int> cells, int index, int start, int currentIteration)
         {
 
             var maxIteration = 1000000;
             while (currentIteration < maxIteration)
             {
                 Grid.GetCoOrdinatesOfCell(index, out int x, out int y);
-                if (isIndexInList(index, cells))
+                if (IsIndexInList(index, cells))
                 {
-                    bool success = canPlaceNumberInCell(false, x, y, start);
+                    bool success = CanPlaceNumberInCell(false, x, y, start);
                     if (success)
                     {
                         if (isBackTrack && Grid.SudokuGrid[x, y] == 9)
                         {
-                            undoNumber(cells, index);
+                            UndoNumber(cells, index);
                             index -= 1;
                         }
                         else
                         {
-                            canPlaceNumberInCell(true, x, y, start);
-                            incrementAfterPlacingNumber(index, out start, out isBackTrack, out index);
+                            CanPlaceNumberInCell(true, x, y, start);
+                            IncrementAfterPlacingNumber(index, out start, out isBackTrack, out index);
                         }
 
                     }
 
                     else
                     {
-                        backTrack(cells, index, out isBackTrack, out start, out index);
+                        BackTrack(cells, index, out isBackTrack, out start, out index);
                     }
 
                 }
@@ -139,42 +138,40 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
                 else
                 {
-                    skipNumberAndProgress(index, isBackTrack, out index, out isBackTrack);
+                    SkipNumberAndProgress(index, isBackTrack, out index, out isBackTrack);
                 }
 
                 currentIteration += 1;
                 if (Grid.IsValidAndIsCompleteSudoku())
                 {
-                    Console.WriteLine(currentIteration + " Total");
                     currentIteration = maxIteration + 1;
                 }
             }
-            Console.WriteLine("FINAL INDEX " + index);
 
         }
-        public void solveBruteForce()
+        public void SolveBruteForce()
 
         {
-            var filledInCells = createCellsToAdd();
-            solveAllSudoku(false, filledInCells, 1, 1, 0);
+            var filledInCells = CreateCellsToAdd();
+            SolveAllSudoku(false, filledInCells, 1, 1, 0);
 
         }
-        public bool canPlaceNumberInCell(bool set, int x, int y, int start)
+        public bool CanPlaceNumberInCell(bool set, int x, int y, int start)
         {
             for (int i = start; i <= 9; i++)
             {
-                Grid.SetNumberOnGrid(x, y, i);
+                Grid.SetNumber(x, y, i, "Brute Force");
                 if (Grid.IsValidOrIsCompleteSudoku(true))
                 {
                     if (!set)
                     {
-                        Grid.SetNumberOnGrid(x, y, 0);
+                        Grid.SetNumber(x, y, 0, "Brute Force");
                     }
                     return true;
                 }
                 else
                 {
-                    Grid.SetNumberOnGrid(x, y, 0);
+                    Grid.SetNumber(x, y, 0, "Brute Force");
                 }
             }
 
@@ -184,7 +181,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         //Example Solution
 
         public int N { get; set; }
-        private bool solveExampleSolution(int[,] board, int iterations)
+        private bool SolveExampleSolution(int[,] board, int iterations)
         {
             for (int row = 0; row < GroupSize; row++)
             {
@@ -195,7 +192,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                         for (int k = 1; k <= GroupSize; k++)
                         {
                             board[row, column] = k;
-                            if (isValid(board, row, column) && solveExampleSolution(board, iterations))
+                            if (IsValid(board, row, column) && SolveExampleSolution(board, iterations))
                             {
                                 return true;
                             }
@@ -208,7 +205,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             }
             return true;
         }
-        private bool checkConstraint( int[,] board,int row, bool[] constraint, int column)
+        private bool CheckConstraint( int[,] board,int row, bool[] constraint, int column)
         {
             if (board[row,column] != 0)
             {
@@ -223,7 +220,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             }
             return true;
         }
-        private bool subsectionConstraint(int[,] board, int row, int column)
+        private bool SubsectionConstraint(int[,] board, int row, int column)
         {
             int BOARD_SIZE =9;
             int SUBSECTION_SIZE = 3;
@@ -238,31 +235,31 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             {
                 for (int c = subsectionColumnStart; c < subsectionColumnEnd; c++)
                 {
-                    if (!checkConstraint(board, r, constraint, c)) return false;
+                    if (!CheckConstraint(board, r, constraint, c)) return false;
                 }
             }
             return true;
         }
-        private bool columnConstraint(int[,] board, int column)
+        private bool ColumnConstraint(int[,] board, int column)
         {
             bool[] constraint = new bool[9];
             return Enumerable.Range(0, 9)
-           .All(row => checkConstraint(board, row, constraint, column));
+           .All(row => CheckConstraint(board, row, constraint, column));
 
         }
-        private bool rowConstraint(int[,] board, int row)
+        private bool RowConstraint(int[,] board, int row)
         {
             bool[] constraint = new bool[9];
             return Enumerable.Range(0, 9)
-             .All(column => checkConstraint(board, row, constraint, column));
+             .All(column => CheckConstraint(board, row, constraint, column));
         }
-        private bool isValid(int[,] board, int row, int column)
+        private bool IsValid(int[,] board, int row, int column)
         {
-            return (rowConstraint(board, row) && columnConstraint(board, column) && subsectionConstraint(board, row, column));
+            return (RowConstraint(board, row) && ColumnConstraint(board, column) && SubsectionConstraint(board, row, column));
         }
-        public void solveBruteForceExample()
+        public void SolveBruteForceExample()
         {
-            solveExampleSolution(Grid.SudokuGrid, 1);
+            SolveExampleSolution(Grid.SudokuGrid, 1);
         }
        
     }

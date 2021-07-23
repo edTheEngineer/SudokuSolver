@@ -15,7 +15,6 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                 {
                     Console.Write(SudokuGrid[i, j]);
                 }
-                Console.WriteLine("");
             }
         }
         public void NakedSingleTechnique ()// Gives Naked Singles Technique
@@ -34,7 +33,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     if (possibilityCount == 1)
                     {
                         var firstPossibility = Grid.Rows[i].Cells[j].Possibilities[0];
-                        Grid.SetNumber(i, j, firstPossibility);
+                        Grid.SetNumberRemovePossibilities(i, j, firstPossibility, "Naked Singles");
                     }
                 }
             }

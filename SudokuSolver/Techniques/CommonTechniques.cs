@@ -25,5 +25,13 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             Grid = gridIn;
         }
 
+        public enum GroupName
+            {
+             Rows,
+             Columns,
+             Blocks
+            
+            }
+
     }
 }

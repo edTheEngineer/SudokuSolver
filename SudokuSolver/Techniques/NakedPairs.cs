@@ -10,14 +10,29 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         public void NakedPair() //Applies the Naked Pair Technique
         {
-            NakedPairSolve();
+            NakedPairSolve(true);
         }
 
-        public void NakedPairTechnique() //Find the Naked Pair and place numbers in cell that have one possibility
+        public void XToMain(string name, int i, int pairY1, int pairY2, out int x1, out int y1, out int x2, out int y2)
         {
-            NakedPair();
-            SetNumberIfCellHasOnePossibility();
+            x1 = 0; x2 = 0; y1 = 0; y2 = 0;
+            if(name =="ROWS")
+            {
+                Grid.RowToMain(i, pairY1, out  x1, out  y1);
+                Grid.RowToMain(i, pairY2, out  x2, out  y2);
+            }
 
+            if (name == "COLS")
+            {
+                Grid.ColumnToMain(i, pairY1, out x1, out y1);
+                Grid.ColumnToMain(i, pairY2, out x2, out y2);
+            }
+
+            if (name == "BLOCKS")
+            {
+                Grid.BlockToMain(i, pairY1, out x1, out y1);
+                Grid.BlockToMain(i, pairY2, out x2, out y2);
+            }
         }
 
         public bool IsCommonCoordinates(int x1, int y1, int x2, int y2)
@@ -32,40 +47,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             return (isRow && isBlock ||isCol&&isBlock);
         } //Finds if 2 Coordinates exist on the same row or block, and same column & block
 
-        public void NakedPairBlocks()
-        {
-            for (int i = 0; i < AdvancedGrid.GroupSize; i++)
-            {
-               
-                string pairB = FindNakedPair(Grid.Blocks[i]);
-                if (pairB != "")
-                {
-                    SplitPairIntoNumbers(pairB, out var num1, out var num2);
-                    FindLocationNakedPair(Grid.Blocks[i], pairB, out var pairY1, out var pairY2);
-                    Grid.BlockToMain(i,pairY1, out var x1, out var y1);
-                    Grid.BlockToMain(i, pairY2, out var x2, out var y2);
-                    GetIntersectingCellLists(x1, y1, out var intersectBlocks, out var intersectColumns, out var intersectRows);
-                    if (IsCommonCoordinates( x1, y1, x2, y2))
-                    {
-                        if (y1==y2)
-                        {
-                            intersectBlocks.AddRange(intersectColumns);
-                        }
-
-                        else
-                        {
-                            intersectBlocks.AddRange(intersectRows);
-                        }
-                        
-                    }
-
-                    Grid.RemovePossibilities(intersectBlocks, num1);
-                    Grid.RemovePossibilities(intersectBlocks, num2);
-
-                }
-            }
-        } //Examines the Blocks and finds Naked Pairs within them
-
+        
         private void GetIntersectingCellLists(int x1, int y1, out List<string> intersectBlocks, out List<string> intersectColumns, out List<string> intersectRows)
         {
             intersectBlocks = Grid.GetIntersectingCellsInGroup(x1, y1, "B");
@@ -81,61 +63,13 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             
         } //Splits a string pair into the 2 number coordinates
 
-        public void NakedPairColumns() //Examines the Columns and finds Naked Pairs within them
+        
+        public void NakedPairSolve(bool isSolve) // Examines the Naked Pairs in Blocks, Rows, and Columns
         {
-            for (int i = 0; i < AdvancedGrid.GroupSize; i++)
-            {
-                string pairC = FindNakedPair(Grid.Columns[i]);
-                if (pairC != "")
-                {
-                    SplitPairIntoNumbers(pairC, out var num1, out var num2);
-                    FindLocationNakedPair(Grid.Columns[i], pairC, out var pairY1,  out var pairY2);
-                    Grid.ColumnToMain(i, pairY1, out var x1, out var y1);
-                    Grid.ColumnToMain(i, pairY2, out var b3, out var b4);
-                    GetIntersectingCellLists(x1, y1, out var intersectBlocks, out var intersectColumns, out _);
+            NakedPairCommon(Grid.Blocks, isSolve, "BLOCKS");
+            NakedPairCommon(Grid.Rows, isSolve, "ROWS");
+           NakedPairCommon(Grid.Columns, isSolve, "COLS");
 
-                    if (IsCommonCoordinates(x1,y1,b3,b4))
-                    {
-                        intersectColumns.AddRange(intersectBlocks);
-                    }
-
-                    Grid.RemovePossibilities(intersectColumns, num1);
-                    Grid.RemovePossibilities(intersectColumns, num2);
-
-                }
-            }
-        }
-
-        public void NakedPairRows() //Examines the Rows and finds Naked Pairs within them
-        {
-            for (int i = 0; i < AdvancedGrid.GroupSize; i++)
-            {
-                string pairR = FindNakedPair(Grid.Rows[i]);
-                if (pairR != "")
-                {
-                    SplitPairIntoNumbers(pairR, out var num1, out var num2);
-                    
-                    FindLocationNakedPair(Grid.Rows[i], pairR, out var pairY1, out  var pairY2);
-                    int x =i;
-                    int y =pairY1;
-                    GetIntersectingCellLists(x, y, out var intersectBlocks, out _, out var intersectRows);
-                    if (IsCommonCoordinates(x, pairY1, i, pairY2))
-                    {
-                        intersectRows.AddRange(intersectBlocks);
-                    }
-                    Grid.RemovePossibilities(intersectRows, num1);
-                    Grid.RemovePossibilities(intersectRows, num2);
-
-                }
-            }
-        }
-
-        public void NakedPairSolve() // Examines the Naked Pairs in Blocks, Rows, and Columns
-        {
-            NakedPairBlocks();
-            NakedPairRows();
-            NakedPairColumns();
-            
         }
 
         public string FindNakedPair(Group g)
@@ -164,6 +98,10 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     if (possibilities[0] == num1 && possibilities[1] == num2)
                     {
                         return i;
+                    }
+                    else
+                    {
+                        Console.WriteLine(possibilities[0] + " " + num1 + " " + possibilities[1] + " " +num2);
                     }
                 }
             }
@@ -280,5 +218,141 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
             return false;
         } //Checks if there is a Naked Pair
+
+        public void addIntersectLists( int y1, int y2, ref List<string>intersectRows, ref List<string> intersectColumns, ref List<string> intersectBlocks,string name)
+        {
+            if(name=="ROWS")
+            {
+                intersectRows.AddRange(intersectBlocks);
+            }
+
+            if (name == "COLS")
+            {
+                intersectColumns.AddRange(intersectBlocks);
+            }
+            if (name == "BLOCKS")
+            {
+                if (y1 == y2)
+                {
+                    intersectBlocks.AddRange(intersectColumns);
+                }
+
+                else
+                {
+                    intersectBlocks.AddRange(intersectRows);
+                }
+            }
+        }
+
+        public void printPairs(int y1, int y2, ref List<string> intersectRows, ref List<string> intersectColumns, ref List<string> intersectBlocks, string name)
+        {
+            if (name == "ROWS")
+            {
+                foreach(var x in intersectRows)
+                {
+                    Console.WriteLine(x);
+                }
+            }
+
+            if (name == "COLS")
+            {
+                foreach (var x in intersectColumns)
+                {
+                    Console.WriteLine(x);
+                }
+            }
+            if (name == "BLOCKS")
+            {
+                foreach (var x in intersectBlocks)
+                {
+                    Console.WriteLine(x);
+                }
+
+                
+            }
+        }
+        public void removex(int num1, int num2, ref List<string> intersectRows, ref List<string> intersectColumns, ref List<string> intersectBlocks, string name)
+        {
+            if (name == "ROWS")
+            {
+                removePoss(intersectRows, num1, num2);
+            }
+
+            if (name == "COLS")
+            {
+                removePoss(intersectColumns, num1, num2);
+            }
+            if (name == "BLOCKS")
+            {
+                removePoss(intersectBlocks, num1, num2);
+            }
+        }
+
+        public void removePoss(List<string> intersect, int num1, int num2)
+        {
+            
+                Grid.RemovePossibilities(intersect, num1, "Naked Pairs");
+                Grid.RemovePossibilities(intersect, num2, "Naked Pairs");
+            
+        }
+        public List<PairC> pairListC = new List<PairC>();
+        public struct PairC
+        {
+            public int x1 { get; set; }
+            public int x2 { get; set; }
+            public int y1 { get; set; }
+            public int y2 { get; set; }
+
+            public int num1 { get; set; }
+
+            public int num2 { get; set; }
+
+            public string name { get; set; }
+        }
+
+        public void setPairs(int x1, int y1, int x2, int y2, string name, int num1, int num2)
+        {
+            PairC p = new PairC();
+            p.x1 = x1;
+            p.x2 = x2;
+            p.y1 = y1;
+            p.y2 = y2;
+            p.name = name;
+            p.num1 = num1;
+            p.num2 = num2;
+            pairListC.Add(p);
+        }
+        public void NakedPairCommon(Group [] g, bool remove, string name)
+        {
+            for (int i = 0; i < AdvancedGrid.GroupSize; i++)
+            {
+                string pairName = FindNakedPair(g[i]);
+                if (pairName != "")
+                {
+                    SplitPairIntoNumbers(pairName, out var num1, out var num2);
+                    FindLocationNakedPair(g[i], pairName, out var pairY1, out var pairY2);
+                    XToMain(name, i, pairY1, pairY2, out int x1, out int y1, out int x2, out int y2);
+                    GetIntersectingCellLists(x1, y1, out var intersectBlocks, out var intersectColumns, out var intersectRows);
+                    bool isCommonCoordinatesV = IsCommonCoordinates(x1, y1, x2, y2);
+                    //MAKE COMMON
+                    if (isCommonCoordinatesV)
+                    {
+                        addIntersectLists(y1, y2, ref intersectRows, ref intersectColumns, ref intersectBlocks, name);
+                        
+                    }
+                    else
+                    {
+                        setPairs(x1, y1, x2, y2, name, num1, num2);
+                    }
+                    
+                    if (remove)
+                    {
+                        removex(num1, num2, ref intersectRows, ref intersectColumns, ref intersectBlocks, name);
+                    }
+                    
+
+                }
+            }
+        }
     }
 }

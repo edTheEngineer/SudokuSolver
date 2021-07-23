@@ -59,7 +59,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     if (isRow)
                     {
                         var j = FindIndexOfPossibilityInGroup(row, numberValue);
-                        Grid.SetNumber(i, j, numberValue);
+                        Grid.SetNumberRemovePossibilities(i, j, numberValue, "Hidden Singles");
                     }
                 }
         }
@@ -74,7 +74,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     if (isCol)
                     {
                         var j = FindIndexOfPossibilityInGroup(col, numberValue);
-                        Grid.SetNumber(j, i, numberValue);
+                        Grid.SetNumberRemovePossibilities(j, i, numberValue, "Hidden Singles");
 
                     }
 
@@ -92,12 +92,10 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     if (isBlock)
                     {
                         var j = FindIndexOfPossibilityInGroup(block, numberValue);
-                        int xCoordinate = 0;
-                        int yCoordinate = 0;
                         if (j != -1)
                         {
-                            FindIndexForBlock(i, j, out xCoordinate, out yCoordinate);
-                            Grid.SetNumber(xCoordinate, yCoordinate, numberValue);
+                            FindIndexForBlock(i, j, out int xCoordinate, out  int yCoordinate);
+                            Grid.SetNumberRemovePossibilities(xCoordinate, yCoordinate, numberValue, "Hidden Singles");
                         }
                     }
 

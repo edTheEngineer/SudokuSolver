@@ -8,7 +8,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
     public class Solver //Context
     {
         public int NumberOfSteps { get; set; } // Property to hold number of steps
-        public List<string> Techniques { get; set; } // Property to hold Techniques used to solve a Sudoku
+        
         public AdvancedGrid Grid { get; set; } //Property to Store a grid
 
         public bool IsSolved { get; set; }
@@ -24,6 +24,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             if (numbersIn == null) throw new ArgumentNullException(nameof(numbersIn));
             Grid = new AdvancedGrid(numbersIn);
             Numbers = numbersIn;
+            
         }
 
        
@@ -33,7 +34,8 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             Numbers = new int[9, 9];
             Grid = new AdvancedGrid(Numbers);
             CellsFilled = 0;
-           
+            
+
         }
 
         public void SaveGrid()
@@ -93,23 +95,42 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             {
                 for (int i = 0; i < 81; i++)
                 {
+
+
+
                     if (Grid.IsValidAndIsCompleteSudoku())
                     {
                         IsSolved = true;
                         IsValid = true;
-                        Console.WriteLine("NAKED SINGLES SUDOKU TOOK " + i + " passes");
+                        break;
+                    }
+                    ns.DoublePair();
+                    Grid = ns.Grid;
+                }
+
+                for (int i = 0; i < 81; i++)
+                {
+
+
+                    
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
                         break;
                     }
                     ns.NakedSingleTechnique();
                     Grid = ns.Grid;
                 }
+
+
                 for (int i = 0; i < 81; i++)
                 {
+                   
                     if (Grid.IsValidAndIsCompleteSudoku())
                     {
                         IsSolved = true;
                         IsValid = true;
-                        Console.WriteLine("HIDDEN SINGLES SUDOKU TOOK " + i + " passes");
                         break;
                     }
                     ns.HiddenSingles();
@@ -118,30 +139,34 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
                 for (int i = 0; i < 81; i++)
                 {
+
                     if (Grid.IsValidAndIsCompleteSudoku())
                     {
                         IsSolved = true;
                         IsValid = true;
-                        Console.WriteLine("NAKED PAIR SUDOKU TOOK " + i + " passes");
                         break;
                     }
                     ns.NakedPair();
                     Grid = ns.Grid;
                 }
 
+
+                
+
                 if (Grid.IsValidAndIsCompleteSudoku())
                 {
                     IsSolved = true;
                     IsValid = true;
-                    Console.WriteLine("No Brute Force needed");
+                    Grid.Techniques.Add("No Brute Force needed");
                 }
 
 
                 else
                 {
-                    ns.solveBruteForce();
+
+                    ns.SolveBruteForce();
                     Grid = ns.Grid;
-                    Console.WriteLine("Brute Force Needed");
+
                 }
 
               

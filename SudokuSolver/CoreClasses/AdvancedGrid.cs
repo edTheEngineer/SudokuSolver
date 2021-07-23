@@ -11,14 +11,14 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
     public class AdvancedGrid
     {
         [JsonProperty("Rows")] //NEED FOR JSON DESERIALISATION
-        public Group [] Rows { get; set; } //Row of Cells
+        public Group[] Rows { get; set; } //Row of Cells
 
         [JsonProperty("Columns")]
-        public Group [] Columns { get; set; } //Column of Cells
+        public Group[] Columns { get; set; } //Column of Cells
 
         [JsonProperty("Blocks")]
-        public Group [] Blocks { get; set; }//Block of Cells
-       
+        public Group[] Blocks { get; set; }//Block of Cells
+
         public static int GroupSize { get; set; } = 9; //Sudoku size 9
 
         [JsonProperty("CellBlock")]
@@ -29,25 +29,35 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         [JsonProperty("ColumnCount")]
         public int ColumnCount { get; set; } //9 columns
+
+        [JsonProperty("BlockWidth")]
+        public int BlockWidth { get; set; }
+
+        [JsonProperty("BlockHeight")]
+        public int BlockHeight { get; set; }
         [JsonProperty("SudokuGrid")]
         public int[,] SudokuGrid { get; set; } //Sudoku Grid
 
-       // [JsonProperty("filledInCells")]
-       // public List<int> filledInCells { get; set; } = new List<int>();
-        public AdvancedGrid(int [,] numbersIn) //Set up an advanced Grid
+        public AdvancedGrid(int[,] numbersIn) //Set up an advanced Grid
         {
             SetBlockDictionary();
             SudokuGrid = numbersIn;
             RowCount = 9;
+            ColumnCount = 9;
+            BlockHeight = 3;
+            BlockWidth = 3;
             Rows = SetRows(numbersIn);
             Columns = SetCols(numbersIn);
             Blocks = SetBlocks(numbersIn);
             SudokuGrid = numbersIn;
             EliminatePossibilitiesInGroups();
-            createCellsToAdd();
+            CreateCellsToAdd();
+            Techniques = new List<string>();
         }
 
-        private void createCellsToAdd()
+        public List<string> Techniques { get; set; } // Property to hold Techniques used to solve a Sudoku
+
+        private void CreateCellsToAdd()
         {
             var filledInCells = new List<int>();
             for (int i = 1; i <= 81; i++)
@@ -61,6 +71,139 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         }
 
+        public void RowToCoOrdinates(int i, int j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2)
+        {
+            r1 = i;
+            r2 = j;
+            c1 = j;
+            c2 = i;
+            GetBlockNumberAndIndexInBlock(i, j, out int x, out int y);
+            b1 = x;
+            b2 = y;
+        }
+
+        public void ColumnToCoOrdinates(int i, int j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2)
+        {
+            r1 = j;
+            r2 = i;
+            c1 = i;
+            c2 = j;
+            GetBlockNumberAndIndexInBlock(i, j, out int x, out int y);
+            b1 = x;
+            b2 = y;
+        }
+
+        public void BlockToCoOrdinates(int i, int j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2)
+        {
+            b1 = i;
+            b2 = j;
+            var oneD = GetOneDRowIndexFromBlockCoordinates(i, j);
+            GetCoOrdinatesOfCell(oneD, out int a, out int b);
+            r1 = a;
+            r2 = b;
+            c1 = b;
+            c2 = a;
+
+        }
+
+        public void HighlightNumber(int num)
+        {
+            UnHighlightAll();
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    var poss = Rows[i].Cells[j].Possibilities;
+                    if(poss.Contains(num))
+                    {
+                        Rows[i].Cells[j].SetColour("showPossibilities");
+                    }
+
+                }
+            }
+            
+        }
+
+        public void UnHighlightNumber(int num)
+        {
+            UnHighlightAll();
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    var poss = Rows[i].Cells[j].Possibilities;
+                    if (poss.Contains(num))
+                    {
+                        Rows[i].Cells[j].SetColour("");
+                    }
+
+                }
+            }
+
+        }
+
+        public void UnHighlightAll()
+
+        {
+            for(int i = 0; i<9; i++)
+            {
+                for(int j = 0; j<9; j++)
+                {
+                    Rows[i].Cells[j].SetColour("");
+                }
+            }
+        }
+
+        public void RemovePossibilitiesFromCell(int i, int j, string name)
+        {
+            GetCoOrdinatesFromName(i, j, name, out int r1, out int r2, out int b1, out int b2, out int c1, out int c2);
+
+            Rows[r1].Cells[r2].RemoveAllPossibilities();
+            Columns[c1].Cells[c2].RemoveAllPossibilities();
+            Blocks[b1].Cells[b2].RemoveAllPossibilities();
+
+        }
+
+        private void GetCoOrdinatesFromName(int i, int j, string name, out int r1, out int r2, out int b1, out int b2, out int c1, out int c2)
+        {
+            r1 = 0;
+            r2 = 0;
+            b1 = 0;
+            b2 = 0;
+            c1 = 0;
+            c2 = 0;
+            if (name == "ROWS")
+            {
+                RowToCoOrdinates(i, j, out r1, out r2, out c1, out c2, out b1, out b2);
+
+            }
+            if (name == "COLUMNS")
+            {
+                ColumnToCoOrdinates(i, j, out r1, out r2, out c1, out c2, out b1, out b2);
+            }
+
+            if (name == "BLOCKS")
+            {
+
+                BlockToCoOrdinates(i, j, out r1, out r2, out c1, out c2, out b1, out b2);
+            }
+        }
+
+        public void AddPossibilitiesToCell(int i, int j, string name, int num1)
+        {
+            GetCoOrdinatesFromName(i, j, name, out int r1, out int r2, out int b1, out int b2, out int c1, out int c2);
+
+            Rows[r1].Cells[r2].AddPossibilities(num1);
+            Columns[c1].Cells[c2].AddPossibilities(num1);
+            Blocks[b1].Cells[b2].AddPossibilities(num1);
+
+        }
+
+        public int GetOneDRowIndexFromBlockCoordinates(int x, int y)
+        {
+            var i = CellsInBlock(x+1);
+            return i[y];
+        }
         public void EliminatePossibilitiesInGroups()
         {
             for (int i= 0; i < 9; i++)
@@ -73,12 +216,14 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         public AdvancedGrid() //Set up a Grid with No Cells
         {
             RowCount = 9;
+            GroupSize = 9;
             SetBlockDictionary();
             SudokuGrid = new int[GroupSize, GroupSize];
             Rows = SetRows(SudokuGrid);
             Columns = SetCols(SudokuGrid);
             Blocks = SetBlocks(SudokuGrid);
-            
+            Techniques = new List<string>();
+
         }
         public Group[] SetRows(int[,] numbers) //Sets up Row Groups
         {
@@ -207,32 +352,29 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         }
 
-        public void SetNumber(int i, int j, int num) //sets a Number
+        public void SetNumberRemovePossibilities(int i, int j, int num, string techniqueName) //sets a Number
         {
-            Rows[i].Cells[j].SetNumber(num);
-            Columns[j].Cells[i].SetNumber(num);
-            GetBlockNumberAndIndexInBlock(i,j, out int x, out int y);
-            Blocks[x].Cells[y].SetNumber(num);
-            SudokuGrid[i, j] = num;
-            //removePossibility(i, j, num);
-            if(num!=0)
+            SetNumber(i, j, num, techniqueName);
+            if (num != 0)
             {
                 RemovePossibilitiesFromIntersectingCells();
             }
-            
+
         }
 
-        public void SetNumberOnGrid(int i, int j, int num) //sets a Number
+        
+        public void SetNumber(int i, int j, int num, string techniqueName)
         {
-            Rows[i].Cells[j].SetNumber(num);
-            Columns[j].Cells[i].SetNumber(num);
-            GetBlockNumberAndIndexInBlock(i, j, out int x, out int y);
-            Blocks[x].Cells[y].SetNumber(num);
-            SudokuGrid[i, j] = num;
-            //removePossibility(i, j, num);
-            
-
+            RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
+            Rows[r1].Cells[r2].SetNumber(num);
+            Rows[r1].Cells[r2].SetColour("");
+            Columns[c1].Cells[c2].SetNumber(num);
+            Blocks[b1].Cells[b2].SetNumber(num);
+            SudokuGrid[r1, r2] = num;
+            var coordinates = getUserFriendlyCoordinates(i, j);
+            Techniques.Add("Put " + num + " in " + coordinates+ " . Technique is " + techniqueName + ".");
         }
+
         public void ClearOriginal(int i, int j) //sets a Number
         {
             Rows[i].Cells[j].SetOriginal(false);
@@ -243,19 +385,18 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         public void AddPossibility(int i, int j, int num) //Adds a Possibility to a Cell, and corresponding Rows / Blocks /Columns
         {
-            Rows[i].Cells[j].AddPossibilities(num);
-            Columns[j].Cells[i].AddPossibilities(num);
-            GetBlockNumberAndIndexInBlock(i, j, out int x, out int y);
-            Blocks[x].Cells[y].AddPossibilities(num);
+            RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
+            Rows[r1].Cells[r2].AddPossibilities(num);
+            Columns[c1].Cells[c2].AddPossibilities(num);
+            Blocks[b1].Cells[b2].AddPossibilities(num);
             
         }
         public void RemovePossibility(int i, int j, int num) //Removes a possibility from a cell, and corresponding Rows/ Blocks / Columns
         {
-           
-            Rows[i].Cells[j].RemovePossibilities(num);
-            Columns[j].Cells[i].RemovePossibilities(num);
-            GetBlockNumberAndIndexInBlock(i, j, out int x, out int y);
-            Blocks[x].Cells[y].RemovePossibilities(num);
+            RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
+            Rows[r1].Cells[r2].RemovePossibilities(num);
+            Columns[c1].Cells[c2].RemovePossibilities(num);
+            Blocks[b1].Cells[b2].RemovePossibilities(num);
 
 
         }
@@ -397,17 +538,24 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                     var currentNumber = Rows[i].Cells[j].Number;
 
                     var intersect = GetIntersectingCells(i, j);
-                    RemovePossibilities(intersect, currentNumber);
+                    RemovePossibilities(intersect, currentNumber, "");
                 }
             }
         }  
 
-        public void RemovePossibilities(List<string> intersect, int num) //Remove Possibilities from the Coordinates sent in. COORDINATES TO BE SPLIT
+        public void RemovePossibilities(List<string> intersect, int num, string techniqueName) //Remove Possibilities from the Coordinates sent in. COORDINATES TO BE SPLIT
         {
             foreach (var t in intersect)
             {
+                
                 SplitTextCoordinate(t, out var i, out var j);
                 RemovePossibility(i, j, num);
+                var coordinates = getUserFriendlyCoordinates(i, j);
+                if(techniqueName !="")
+                {
+                    Techniques.Add("Remove " + num + " from " + coordinates+" . Technique is " + techniqueName + ".");
+                }
+                
             }
         }
 
@@ -425,9 +573,15 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             yy = x;
         }
 
-        public void SetGrid(int i, int j, int number)
+        public void RowToMain(int x, int y, out int xx, out int yy)
         {
-            SetNumber(i, j, number);
+            xx = x;
+            yy = y;
+        }
+
+        public void SetGrid(int i, int j, int number, string techniqueName)
+        {
+            SetNumberRemovePossibilities(i, j, number, techniqueName);
         }
 
         public void ClearGrid()
@@ -436,7 +590,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             {
                 for (int j = 0; j < GroupSize; j++)
                 {
-                    SetNumber(i, j, 0);
+                    SetNumberRemovePossibilities(i, j, 0, "");
                 }
             }
 
@@ -447,6 +601,8 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                     ClearOriginal(i, j);
                 }
             }
+
+            Techniques.RemoveAll(x => x != "");
         }
 
         public static AdvancedGrid FromJson(string json)
@@ -488,5 +644,33 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             return IsValidOrIsCompleteSudoku(true) && IsValidOrIsCompleteSudoku(false);
         }
 
+        public void findNextCell(int i, int j, out int x, out int y)
+        {
+            x=0;
+            y=0;
+
+            var oneD = Get1DIndex(i,j);
+            var newOneD = oneD+2;
+            var mod = newOneD % 81;
+            if (mod == 0)
+            {
+                mod = 81;
+            }
+            GetCoOrdinatesOfCell(mod, out x, out y);
+        }
+
+        public string getUserFriendlyCoordinates(int i, int j)
+        {
+            int x = i + 1;
+            int a = (char)('A');
+            int diff = a+j;
+            char y = Convert.ToChar(diff);
+            
+            return "[" + x + " , " + y+"]";
+        }
+
+
+
+       
     }
 }

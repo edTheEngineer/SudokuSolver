@@ -16,7 +16,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         [JsonProperty( PropertyName ="Possibilities")]
         public List<int> Possibilities { get; private set; } //Possibilities of the Cell
          //public int[] Possibilities { get; private set; }
-        public void setPossibilities(List<int> poss)
+        public void SetPossibilities(List<int> poss)
         {
             for (int i = 0; i<poss.Count; i++)
             {
@@ -36,11 +36,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             }
 
             IsOriginalValue = false;
-            if (Possibilities.Count > 9)
-            {
-                Console.WriteLine("DOX  IN BLANK CONSTRUCTOR");
-            }
-            
+
         }
 
         public Cell(int number) //Set a Cell with Numbers and No Possibilities
@@ -61,10 +57,6 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                 IsOriginalValue = true;
             }
 
-            if (0 > 9)
-            {
-                Console.WriteLine("DOX  IN NUMBER");
-            }
         }
 
         public void SetNumber(int number) //Add A Number to the Cell, and remove all possibilities
@@ -91,7 +83,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         {
             Colour = colourIn;
         }
-        private void RemoveAllPossibilities() //Remove all Possibilities
+        public void RemoveAllPossibilities() //Remove all Possibilities
         {
             Possibilities.RemoveAll(x => x >= 0);
         }
@@ -130,6 +122,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             Possibilities.RemoveAll(x=>x==number);
         }
 
+      
 
     }
 }
