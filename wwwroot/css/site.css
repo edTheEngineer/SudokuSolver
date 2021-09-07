@@ -77,11 +77,86 @@ body {
 .Explanation{
 border:2px solid darkblue;
 border-radius:15px;
+max-height:400px;
+overflow-y:scroll;
 }
 
 .numbersToSelect {
     border: 2px solid orange;
     border-radius:15px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="text"] {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    caret-color: transparent;
+
+}
+
+    input[type="text"]:focus {
+        border: 2px solid orange;
+        outline: none;
+    }
+
+    .dropbtn {
+        background-color: orange;
+        color: white;
+        padding: 6px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: orange;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content button {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+.dropdown-content button:hover {
+            background-color: #f1f1f1
+        }
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: orange;
+}
+
+
+.colourSelect {
+    max-width: 20px;
+    min-width: 20px;
+    max-height: 20px;
+    min-height: 20px;
+    display: inline-block;
+    float:right
 }
 
 .row {
@@ -165,35 +240,35 @@ input:checked + .slider:before {
 }
 
 .Red{
-    background-color:red;
+    background-color:red !important;
 }
 
 .Orange {
-    background-color: orange;
+    background-color: orange !important;
 }
 
 .Yellow {
-    background-color: yellow;
+    background-color: yellow !important;
 }
 
 .Green {
-    background-color: lawngreen;
+    background-color: #99ffbb !important;
 }
 
 .Purple {
-    background-color: mediumpurple;
+    background-color: mediumpurple !important;
 }
 
 .Pink {
-    background-color: deeppink;
+    background-color: deeppink !important;
 }
 
 .Brown {
-    background-color: brown;
+    background-color: brown !important;
 }
 
 .Black {
-    background-color: black;
+    background-color: black !important;
 }
 
 .sudokuButton {
@@ -201,6 +276,12 @@ input:checked + .slider:before {
     border: 0.5px solid grey;
     width: 50px;
     height: 50px;
+}
+
+.colourButton{
+    background-color:white;
+    border: 2px solid white;
+    width:100%;
 }
 
 .thirdRow{
@@ -254,7 +335,8 @@ border-bottom: 5px solid cornflowerblue;
 }
 
 .cellSelected {
-    border: 2px solid orange;
+    border: 1.5px solid orange;
+
 }
 
 .original {
@@ -277,7 +359,6 @@ border-bottom: 5px solid cornflowerblue;
     line-break: normal;
     word-break: break-word;
     overflow: hidden;
-    background-color: white;
     color: lightgray;
 }
 .NotSolved {
@@ -315,16 +396,168 @@ border-bottom: 5px solid cornflowerblue;
 .highlight{
     border:2px solid green:
 }
+.invalidCell {
+    background-color: #ff6666;
+}
+/* Smallest devices (Ed's phone) */
+@media only screen and (max-width: 400px) {
 
-@media screen and (device-width: 360px) and (device-height: 640px) and (-webkit-device-pixel-ratio: 3) {
-    .sudokuButton{
-       width:45px;
-       height:45px;
+    .sudokuGrid {
+        margin: 5%;
+        margin-left: 35%;
+    }
 
+    .mediaQueryTest {
+        background-color: pink;
+    }
+    .sudokuPossibilities {
+        width: 35px;
+        height: 35px;
+        line-height: 10px;
+        font-size:8px;
+    }
+
+    .sudokuButton {
+        width: 35px;
+        height: 35px;
+    }
+
+    .NotSolved, .nonOriginal, .original{
+        font-size:16px;
+    }
+
+    .mainGrid{
+        margin-left:0;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 500px) {
+
+
+   .sudokuGrid{
+       margin:5%;
+       margin-left:35%;
    }
+
+    .sudokuButton {
+        width: 45px;
+        height: 45px;
+    }
 
     .sudokuPossibilities {
         width: 45px;
         height: 45px;
+        padding-left: 10px;
+        padding-right: 10px;
+        line-height: 12px;
+        line-break: normal;
+        word-break: break-word;
+        overflow: hidden;
+        color: lightgray;
+    }
+
+    .cellSelected{
+        border: 1px solid orange;
+    }
+
+    .mediaQueryTest {
+        background-color: green;
     }
 }
+
+
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+
+    .sudokuGrid {
+        margin: 5%;
+        margin-left: 35%;
+    }
+
+    .mediaQueryTest{
+        background-color:red;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+    .sudokuGrid {
+        margin: 5%;
+        margin-left: 20%;
+    }
+
+    .sudokuPossibilities{
+        width:45px;
+        height:45px;
+    }
+
+    .sudokuButton {
+        width: 45px;
+        height: 45px;
+    }
+
+    .mediaQueryTest {
+        background-color: blue;
+    }
+
+    .NotSolved, .nonOriginal, .original {
+        font-size: 20px;
+    }
+
+    .sudokuPossibilities{
+        font-size:14px;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+    .sudokuGrid {
+        margin: 5%;
+        margin-left: 28%;
+    }
+
+    .mediaQueryTest {
+        background-color: orange;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+    .sudokuGrid {
+        margin: 25%;
+    }
+
+    .mediaQueryTest {
+        background-color: yellow;
+    }
+
+    .sudokuButton {
+        width: 50px;
+        height: 50px;
+    }
+
+    .sudokuPossibilities {
+        width: 50px;
+        height: 50px;
+        padding-left: 10px;
+        padding-right: 10px;
+        line-height: 14px;
+        line-break: normal;
+        word-break: break-word;
+        overflow: hidden;
+        color: lightgray;
+    }
+
+    .NotSolved, .nonOriginal, .original {
+        font-size: 30px;
+    }
+
+
+}
+
+

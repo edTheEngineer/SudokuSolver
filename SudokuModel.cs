@@ -21,7 +21,7 @@ namespace RazorPagesSudoku
         [TempData]
         public string ResultInfo { get; set; }
 
-
+        public string Message { get; set; }
         [BindProperty]
         public string CellSelection { get; set; }
         public string[] Cells = new[] { "Single Cell", "Multi Cell" };
@@ -31,6 +31,8 @@ namespace RazorPagesSudoku
         public bool IsSolved { get; set; }
         public bool IsMinimum { get; set; }
         public bool IsValid { get; set; }
+
+        public bool IsTyped { get; set; }
 
         public List<string> Techniques { get; set; }
 
@@ -53,6 +55,11 @@ namespace RazorPagesSudoku
 
         public string SessionInfoIsValid { get; private set; }
         public const string SessionKeyIsValid = "_IsValid";
+
+        //IsTyped
+
+        public string SessionInfoIsTyped { get; private set; }
+        public const string SessionKeyIsTyped= "_IsTyped";
 
         //IsMinimum
 
@@ -132,6 +139,7 @@ namespace RazorPagesSudoku
             SetSessionStringIfNull(SessionKeyHighlightedCells);
             SetSessionStringIfNull(SessionKeyIsMinimum);
             SetSessionStringIfNull(SessionKeyIsValid);
+            SetSessionStringIfNull(SessionKeyIsTyped);
             SetSessionStringIfNull(SessionKeySolved);
             SetSessionStringIfNull(SessionKeyIsNumber);
             SessionInfoSelectedI = HttpContext.Session.GetString(SessionKeySelectedI);
@@ -139,8 +147,10 @@ namespace RazorPagesSudoku
             SessionInfoHighlightedCells = HttpContext.Session.GetString(SessionKeyHighlightedCells);
             SessionInfoIsMinimum = HttpContext.Session.GetString(SessionKeyIsMinimum);
             SessionInfoIsValid = HttpContext.Session.GetString(SessionKeyIsValid);
+            SessionInfoIsTyped = HttpContext.Session.GetString(SessionKeyIsTyped);
             SessionInfoSolved = HttpContext.Session.GetString(SessionKeySolved);
             SessionInfoIsNumber = HttpContext.Session.GetString(SessionKeyIsNumber);
+
             //GetIntersectingTechniques();
         }
 
@@ -158,6 +168,7 @@ namespace RazorPagesSudoku
             {
                 HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
                 HttpContext.Session.SetString(SessionKeyIsValid, "-");
+                HttpContext.Session.SetString(SessionKeyIsTyped, "-");
                 HttpContext.Session.SetString(SessionKeySolved, "-");
                 HttpContext.Session.SetString(SessionKeyIsMinimum, "-");
                 HttpContext.Session.SetString(SessionKeyIsNumber, "-");
@@ -168,6 +179,7 @@ namespace RazorPagesSudoku
                 HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
                 HttpContext.Session.Set(SessionKeyTechniques, Techniques);
                 HttpContext.Session.SetString(SessionKeyIsValid, IsValid.ToString());
+                HttpContext.Session.SetString(SessionKeyIsTyped, IsTyped.ToString());
                 HttpContext.Session.SetString(SessionKeySolved, IsSolved.ToString());
                 HttpContext.Session.SetString(SessionKeyIsMinimum, IsMinimum.ToString());
             }
@@ -187,13 +199,18 @@ namespace RazorPagesSudoku
         }
 
 
-        public async Task<IActionResult> OnPostSolveSudokuAsync()
+        public async Task<IActionResult> OnPostSolveSudokuAsync(string isTyped)
         {
             if (!ModelState.IsValid)
             {
                 await Task.CompletedTask;
                 ResultInfo = "Invalid Sudoku Solve";
                 return Page();
+            }
+
+            if (isTyped =="checked")
+            {
+                SaveTypedSudoku();
             }
             GetGridCells();
             SerializeGrid();
@@ -311,6 +328,40 @@ namespace RazorPagesSudoku
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostLoadSudokuAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Select Cell";
+                return Page();
+            }
+            SaveTypedSudoku();
+
+            return RedirectToPage();
+        }
+
+        private void SaveTypedSudoku()
+        {
+            GetGridCells();
+            SerializeGrid();
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    var idToAdd = "myInput;" + i + ";" + j;
+                    var element = Request.Form[idToAdd];
+                    string e = element.ToString();
+                    if (e != "")
+                    {
+                        Grid.SetNumberRemovePossibilities(i, j, Convert.ToInt32(e), "");
+                    }
+
+                }
+            }
+            HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
+            SerializeGrid();
+        }
 
         public async Task<IActionResult> OnPostHighlightPossiblityAsync(int num)
         {
@@ -341,7 +392,7 @@ namespace RazorPagesSudoku
             SerializeGrid();
             if(isHighlight)
             {
-                Grid.HighlightNumber(num);
+                Grid.HighlightNumber(num, "showPossibilities");
             }
 
             else
@@ -371,7 +422,7 @@ namespace RazorPagesSudoku
             Grid.SetNumberRemovePossibilities(iNumber, jjNumber, num, "");
             if(SessionInfoHighlightedCells!="-")
             {
-                Grid.HighlightNumber(Convert.ToInt32(SessionInfoHighlightedCells));
+                Grid.HighlightNumber(Convert.ToInt32(SessionInfoHighlightedCells), "showPossibilities");
             }
             
             HttpContext.Session.Set(SessionKeySudokuGrid, Grid); 
@@ -381,11 +432,41 @@ namespace RazorPagesSudoku
             setSelectedCell(x, y);
             IsValid = g.IsValidOrIsCompleteSudoku(true);
             HttpContext.Session.SetString(SessionKeyIsValid, IsValid.ToString());
+            // Highlight
+            var iString = num.ToString();
+            //var jString = j.ToString();
+            GetGridCells();
+           
+            SerializeGrid();
+            if (!IsValid)
+            {
+                Grid.HighlightError();
+            }
+
+            HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
             return RedirectToPage();
 
 
         }
 
+        public async Task<IActionResult> OnPostSetColourAsync(string className)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Select Number";
+                return Page();
+            }
+            GetGridCells();
+            var iNumber = Convert.ToInt32(SessionInfoSelectedI);
+            var jjNumber = Convert.ToInt32(SessionInfoSelectedJ);
+
+            SerializeGrid();
+            Grid.Rows[iNumber].Cells[jjNumber].SetColour(className);
+            HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
+            return RedirectToPage();
+
+        }
         public async Task<IActionResult> OnPostSkipNumberAsync()
         {
             if (!ModelState.IsValid)
@@ -495,6 +576,28 @@ namespace RazorPagesSudoku
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostShowButtonsOrGridAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Select Number";
+                return Page();
+            }
+            GetGridCells();
+            SerializeGrid();
+            if (SessionInfoIsTyped == "False" || SessionInfoIsTyped =="-")
+            {
+                HttpContext.Session.SetString(SessionKeyIsTyped, "True");
+            }
+
+            else
+            {
+                HttpContext.Session.SetString(SessionKeyIsTyped, "False");
+            }
+            return RedirectToPage();
+        }
+
         private void setSelectedCell(int x, int y )
         {
             var iString = x.ToString();
@@ -513,5 +616,7 @@ namespace RazorPagesSudoku
                 HttpContext.Session.SetString(SessionKeySelectedJ, y.ToString());
             }
         }
+
+
     }
 }

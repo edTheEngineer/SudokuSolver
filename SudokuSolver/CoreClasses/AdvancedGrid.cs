@@ -106,7 +106,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         }
 
-        public void HighlightNumber(int num)
+        public void HighlightNumber(int num, string className)
         {
             UnHighlightAll();
             for (int i = 0; i < 9; i++)
@@ -116,13 +116,33 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                     var poss = Rows[i].Cells[j].Possibilities;
                     if(poss.Contains(num))
                     {
-                        Rows[i].Cells[j].SetColour("showPossibilities");
+                        Rows[i].Cells[j].SetColour(className);
                     }
 
                 }
             }
             
         }
+
+        public void HighlightError()
+        {
+            UnHighlightAll();
+            var poss = findInvalidCells();
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    var check = i + ";" + j;
+                    if (poss.Contains(check))
+                    {
+                        Rows[i].Cells[j].SetColour("invalidCell");
+                    }
+
+                }
+            }
+
+        }
+
 
         public void UnHighlightNumber(int num)
         {
@@ -441,6 +461,23 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         }
 
         
+        public List<string> findInvalidCells()
+        {
+            List<string> ans = new List<string>() {};
+            bool isValid = IsValidOrIsCompleteSudoku(true);
+
+            if (isValid)
+            {
+                return new List<string>();
+            }
+
+            else
+            {
+                var duplicates = ReturnDuplicates();
+                return duplicates;
+            }
+            
+        }
 
         public void GetCoOrdinatesOfCell(int cellIn, out int i, out int y) //Gets x and Y coordinate of a singular Index
         {
@@ -616,6 +653,24 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         {
             return IsValidOrIsCompleteGroups(Rows, isValidComplete) && IsValidOrIsCompleteGroups(Columns, isValidComplete) && IsValidOrIsCompleteGroups(Blocks, isValidComplete);
         } //Checks the Sudoku is Valid & Complete
+
+        public List<string> ReturnDuplicates()
+        {
+            List<string> ans = new List<string>();
+            Console.WriteLine("ROWS");
+            var r = ReturnInvalidDuplicates(Rows, "R");
+            Console.WriteLine("COLS");
+            var c = ReturnInvalidDuplicates(Columns, "C");
+            Console.WriteLine("BLOCKS");
+            var b = ReturnInvalidDuplicates(Blocks, "B");
+            ans.AddRange(r);
+            ans.AddRange(c);
+            ans.AddRange(b);
+            ans.Sort();
+            var x = ans.Distinct().ToList();
+            
+            return x;
+        }
         public bool IsValidOrIsCompleteGroups(Group[] groupSet, bool isValidCompleteCall) //Checks that the set of Groups is Valid and Complete
         {
             for (int i = 0; i < groupSet.Count(); i++)
@@ -639,6 +694,55 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
             return true;
         }
+
+        public List<string> ReturnInvalidDuplicates(Group[] groupSet, string groupName) //Checks that the set of Groups is Valid and Complete
+        {
+            List<string> trueAns = new List<string>();
+            for (int i = 0; i < groupSet.Count(); i++)
+            {
+                var ans = groupSet[i].InvalidList();
+                Console.WriteLine("i is " + i);
+                Console.WriteLine(string.Join("-", ans));
+                var abc = buildCoordinates(ans, i, groupName);
+                Console.WriteLine(string.Join("~", abc));
+                trueAns.AddRange(abc);
+            }
+
+            return trueAns;
+        }
+
+        public List<string> buildCoordinates(List<int> ed, int indexIn, string g)
+        {
+            List<string> ans = new List<string>();
+
+            for(int i = 0; i<ed.Count; i++)
+            {
+                if(g =="R")
+
+                {
+                   
+                       var check = indexIn + ";" + ed[i];
+                    ans.Add(check);
+                }
+
+                if(g =="B")
+                {
+
+                    var oneD = GetOneDRowIndexFromBlockCoordinates(indexIn, ed[i]);
+                    GetCoOrdinatesOfCell(oneD, out int a, out int b);
+                    ans.Add(a + ";" + b);
+                }
+
+                if(g =="C")
+                {
+                    var check = ed[i] + ";" + indexIn;
+                    ans.Add(check);
+                }
+            }
+
+            Console.WriteLine(string.Join("---", ans));
+            return ans;
+        }
         public bool IsValidAndIsCompleteSudoku() //Checks Sudoku is Valid and Is Complete
         {
             return IsValidOrIsCompleteSudoku(true) && IsValidOrIsCompleteSudoku(false);
@@ -646,6 +750,23 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         public void findNextCell(int i, int j, out int x, out int y)
         {
+
+            x = i;
+            y = j+1;
+
+            if (y > 8)
+            {
+                Console.WriteLine("y - 9 and x + 1");
+                y -= 9;
+                x += 1;
+
+                if (x > 8)
+                {
+                    Console.WriteLine("x-9");
+                    x -= 9;
+                }
+            }
+            /*
             x=0;
             y=0;
 
@@ -656,9 +777,82 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             {
                 mod = 81;
             }
+            
             GetCoOrdinatesOfCell(mod, out x, out y);
+
+            */
         }
 
+        public void findPreviousCell(int i, int j, out int x, out int y)
+        {
+
+            x = i;
+            y = j-1;
+            if (y < 0)
+            {
+                y += 9;
+                x -= 1;
+                Console.WriteLine("Y + 9 and X - 1");
+                if (x < 0)
+                {
+                    Console.WriteLine("X + 9");
+                    x += 9;
+                }
+            }
+            /*
+            x = 0;
+            y = 0;
+
+            var oneD = Get1DIndex(i, j);
+            var newOneD = oneD;
+            var mod = newOneD % 81;
+            if (mod == 0)
+            {
+                mod = 81;
+            }
+            GetCoOrdinatesOfCell(mod, out x, out y);#*/
+        }
+
+        public void findUpwardsCell(int i, int j, out int x, out int y)
+        {  //default
+            
+            x = i - 1;
+            y = j;
+            if(x<0)
+            {
+                x += 9;
+                y -=1;
+                Console.WriteLine("X + 9 and Y - 1");
+                if(y<0)
+                {
+                    Console.WriteLine("Y + 9");
+                    y += 9;
+                }
+            }
+
+        }
+    
+
+        public void findDownwardsCell(int i, int j, out int x, out int y)
+        {
+
+            x = i + 1;
+            y = j;
+
+            if(x >8)
+            {
+                Console.WriteLine("X - 9 and Y + 1");
+                x -= 9;
+                y += 1;
+
+                if(y>8)
+                {
+                    Console.WriteLine("Y-9");
+                    y -= 9;
+                }
+            }
+           
+        }
         public string getUserFriendlyCoordinates(int i, int j)
         {
             int x = i + 1;
@@ -669,8 +863,61 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             return "[" + x + " , " + y+"]";
         }
 
+        public string moveCoordinate(string coordinate, string direction)
+
+        {
+            //myInput
+            string word = "myInput;";
+            string trueCoordinate = coordinate.Substring(8);
+            Console.WriteLine(trueCoordinate);
+            if(direction =="up")
+            {
+                return  word + Up(trueCoordinate);
+            }
+
+            if (direction == "down")
+            {
+                return word + Down(trueCoordinate);
+            }
+            if (direction == "left")
+            {
+                return word + Left(trueCoordinate);
+            }
+
+            if (direction == "right")
+            {
+                return word + Right(trueCoordinate);
+            }
+            return coordinate;
+        }
 
 
-       
+        private string Up(string coordinate)
+        {
+            SplitTextCoordinate(coordinate, out int i, out int j);
+            findUpwardsCell(i, j, out int x, out int y);
+            return x + ";" + y;
+        }
+
+        private string Down(string coordinate)
+        {
+            SplitTextCoordinate(coordinate, out int i, out int j);
+            findDownwardsCell(i, j, out int x, out int y);
+            return x + ";" + y;
+        }
+
+        private string Left(string coordinate)
+        {
+            SplitTextCoordinate(coordinate, out int i, out int j);
+            findPreviousCell(i, j, out int x, out int y);
+            return x + ";" + y;
+        }
+
+        private string Right(string coordinate)
+        {
+            SplitTextCoordinate(coordinate, out int i, out int j);
+            findNextCell(i, j, out int x, out int y);
+            return x + ";" + y;
+        }
     }
 }

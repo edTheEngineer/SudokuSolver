@@ -81,7 +81,16 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         }
         public void SetColour(string colourIn) //Set the colour of a cell
         {
-            Colour = colourIn;
+            if(Colour ==colourIn)
+            {
+                Colour = "";
+            }
+
+            else
+            {
+                Colour = colourIn;
+            }
+            
         }
         public void RemoveAllPossibilities() //Remove all Possibilities
         {

@@ -93,20 +93,20 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             Technique ns = new Technique(Numbers);
             if (IsMinimum)
             {
+
                 for (int i = 0; i < 81; i++)
                 {
-
-
-
                     if (Grid.IsValidAndIsCompleteSudoku())
                     {
                         IsSolved = true;
                         IsValid = true;
                         break;
                     }
-                    ns.DoublePair();
+                    ns.RemotePairTechnique();
                     Grid = ns.Grid;
                 }
+
+                
 
                 for (int i = 0; i < 81; i++)
                 {
@@ -123,7 +123,17 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                     Grid = ns.Grid;
                 }
 
-
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.DoublePair();
+                    Grid = ns.Grid;
+                }
                 for (int i = 0; i < 81; i++)
                 {
                    

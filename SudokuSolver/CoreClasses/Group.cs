@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
@@ -36,6 +37,12 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             var list = CellsToNumbers();
             return IsValidSet(list);
         }
+
+        public List<int> InvalidList()
+        {
+            var list = CellsToNumbers();
+            return findDuplicates(list);
+        }
         public bool IsComplete() //Checks if Group of cells is complete
         {
                 var list = CellsToNumbers();
@@ -71,6 +78,33 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
 
             return true;
+        }
+
+
+        public List<int> findDuplicates(List<int> numbers)
+        {
+            List<int> ans = new List<int>();
+            for(int i=1; i<=9; i++)
+            {
+                var repeats = numbers.FindAll(x => x == i);
+                
+                
+                if(repeats.Count>1)
+                {
+                    List<int> indexes = new List<int>();
+                    for (int j = 0; j < 9; j++)
+                    {
+                        if(numbers[j]==i)
+                        {
+                            indexes.Add(j);
+                        }
+                    }
+                    ans.AddRange(indexes);
+                }
+               
+            }
+
+            return ans;
         }
         private bool IsCompleteSet(List<int> numbers)//Checks if List of Numbers is Complete
         {

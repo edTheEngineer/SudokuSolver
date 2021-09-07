@@ -9,226 +9,215 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         public void RemotePairTechnique()
         {
             NakedPairSolve(false);
+            var uniqueList = FindCoordinatesOfNakedPairs();
+            Console.WriteLine(string.Join("=", uniqueList));
+            ListHandling l = new ListHandling();
+            var chain = l.FindRemotePairChain(uniqueList);
+            var filteredChain = FilterChain(chain);
+            foreach (var x in filteredChain)
+            {
+                var coordinate = x.Split("-").ToList();
+                RemoveRemotePairs(coordinate);
+            }
+        }
 
+        public bool AreSamePossibilities(string [] chain)
+        {
+            Grid.SplitTextCoordinate(chain[0], out int i, out int j);
+            var firstPossibilities = Grid.Rows[i].Cells[j].Possibilities;
+            foreach (var x in chain)
+            {
+                Grid.SplitTextCoordinate(x, out int ii, out int jj);
+                var secondPossiblities = Grid.Rows[ii].Cells[jj].Possibilities;
+                if (!SamePossiblities(firstPossibilities, secondPossiblities))
+                {
+                    return false;
+                }
+
+
+            }
+
+            return true;
+        }
+
+        public List<string> FilterChain(List<string> chain)
+        {
+            List<string> answer = new List<string>();
+            foreach (var x in chain)
+            {
+                var chainArray = x.Split("-");
+                bool canAddPossibilities = AreSamePossibilities(chainArray);
+                if(canAddPossibilities)
+                {
+                    answer.Add(x);
+                }
+            }
+
+            foreach(var x in answer)
+            {
+                Console.WriteLine(x + ", ");
+            }
+            return answer;
+        }
+        public bool SamePossiblities(List<int> possibilityListOne, List<int> possibilityListTwo)
+        {
+            possibilityListOne.Sort();
+            possibilityListTwo.Sort();
+
+            if(possibilityListOne.Count !=possibilityListTwo.Count)
+            {
+                return (false);
+            }
+
+            if(possibilityListOne.Count!=2)
+            {
+                return false;
+            }
+
+            if (possibilityListTwo.Count != 2)
+            {
+                return false;
+            }
+            for (int i = 0; i<possibilityListOne.Count; i++)
+            {
+                var one = possibilityListOne[i];
+                var two = possibilityListTwo[i];
+
+                if(one !=two)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        private void RemoveRemotePairs(List<string> chain)
+        {
+            int firstChainCount = 0;
+            int secondChainCount = 0;
+            int one = -1;
+            int two = -1;
+
+            ListHandling l = new ListHandling();
+            l.SplitRemoteChainList(chain, out List<string> odd, out List<string> even);
+            foreach(var first in chain)
+            {
+                
+                foreach(var last in chain)
+                {
+                    int modFirstChain = firstChainCount % 2;
+                    int modSecondChain = secondChainCount % 2;
+                    if(first !=last  )
+                    
+                    {
+
+                        if (modFirstChain != modSecondChain)
+                        {
+
+                            Grid.SplitTextCoordinate(first, out int a, out int b);
+                            Grid.SplitTextCoordinate(last, out int c, out int d);
+                            var possibilityListOne = Grid.Rows[a].Cells[b].Possibilities;
+                            var p2 = Grid.Rows[c].Cells[d].Possibilities;
+                            if (SamePossiblities(possibilityListOne, p2))
+                            {
+                                one = possibilityListOne[0];
+                                two = p2[1];
+                                var intersect = FindIntersect(first, last);
+
+                                if (intersect.Count >= 0)
+                                {
+                                    Console.WriteLine("REMOVE " + "[" + first + " " + last + "]" + one + " / " + two + " from " + string.Join("@", intersect));
+                                    RemoveNumbersFromCoordinates(intersect, one);
+                                    RemoveNumbersFromCoordinates(intersect, two);
+                                }
+                            }
+                        }
+                        
+                    }
+                    secondChainCount += 1;
+                }
+                firstChainCount += 1;
+            }
+            
+
+            
+        }
+        private List<string> FindCoordinatesOfNakedPairs()
+        {
+            List<string> allPairs = new List<string>();
 
             foreach (var x in pairListC)
             {
-                Console.WriteLine("[" + x.x1 + "," + x.y1 + "] " + "[" + x.x2 + "," + x.y2 + "]" + x.name + " = " + x.num1 + " + " + x.num2);
+                var pair1 = (x.x1 + ";" + x.y1);
+                var pair2 = (x.x2 + ";" + x.y2);
+                allPairs.Add(pair1);
+                allPairs.Add(pair2);
             }
 
-            var query = from pairs in pairListC
-                        orderby pairs.x1, pairs.x2, pairs.y1, pairs.y2
-                        select (pairs.x1, pairs.x2, pairs.y1, pairs.y2, pairs.num1, pairs.num2);
-            for(int i =0; i<query.Count()-1; i++)
-            
-            {
-                var first = query.ElementAt(i);
-                var second = query.ElementAt(i+1);
-                PairC one = new PairC();
-                PairC two = new PairC();
-                one.x1 = first.x1;
-                one.x2 = first.x2;
-                one.y1 = first.y1;
-                one.y2 = first.y2;
-
-                two.x1 = second.x1;
-                two.x2 = second.x2;
-                two.y1 = second.y1;
-                two.y2 = second.y2;
-
-                var isChain = isNakedPairChain(one, two);
-                Console.WriteLine(isChain + "  ");
-
-                if(!isChain)
-                {
-                    return;
-                }
-            }
-
-            var p1 = query.First();
-            var p2 = query.Last();
-
-            var a = p1.x1 + ";" + p1.y1;
-            var b = p2.x2 + ";" + p2.y2;
-
-            var abc = findIntersect(a, b);
-
-            Console.WriteLine(abc + " Intersect");
-            removePairs(abc, p1.num1);
-            removePairs(abc, p1.num2);
+            Console.WriteLine("ALL PAIRS" + allPairs.Count);
+            Console.WriteLine("pairList" + pairListC.Count);
+            List<string> uniqueList = allPairs.Distinct().ToList();
+            return uniqueList;
         }
 
-       public void removePairs(string xxx, int num)
+        public void RemoveNumbersFromCoordinates(List<string> coordinates, int num)
         {
-           var a= xxx.Split(" ");
-            var a1 = a[0].Split(";");
-            var a2 = a[1].Split(";");
-
-            Grid.RemovePossibility(Convert.ToInt32(a1[0]), Convert.ToInt32(a1[1]), num);
-            Grid.RemovePossibility(Convert.ToInt32(a2[0]), Convert.ToInt32(a2[1]), num);
+            foreach(var x in coordinates)
+            {
+                var coordinate = x.Split(";");
+                var firstCoordinate = coordinate[0];
+                var secondCoordinate = coordinate[1];
+                Grid.RemovePossibility(Convert.ToInt32(firstCoordinate), Convert.ToInt32(secondCoordinate), num);
+                Grid.RemovePossibility(Convert.ToInt32(firstCoordinate), Convert.ToInt32(firstCoordinate), num);
+            }
+           
         }
 
-        public bool commonCheck(int a, int b, int c, int d)
-            {
-              if(a ==b &&b==c)
-            {
-                return false;
-            }
-
-            if (a == b && b==d)
-            {
-                return false;
-            }
-
-            if (b==c &&c==d && b==d)
-            {
-                return false;
-            }
-
-            return true;
-        }
-        public bool isNakedPairChain(PairC pairOne, PairC pairTwo)
+        public bool IsSameRowColumnOrBlock(string x, string y)
         {
-            var p1 = pairOne.x1 + ";" + pairOne.y1;
-            var p2 = pairOne.x2 + ";" + pairOne.y2;
-            var p3 = pairTwo.x1 + ";" + pairTwo.y1;
-            var p4 = pairTwo.x2 + ";" + pairTwo.y2;
+            ListHandling L = new ListHandling();
+            L.GetRowColumnBlock(x, out int r1, out int c1, out int b1);
+            L.GetRowColumnBlock(y, out int r2, out int c2, out int b2);
 
-            var p1R = findRow(p1);
-            var p1C = findCol(p1);
-            var p1B = findCol(p1);
-
-            var p2R = findRow(p2);
-            var p2C = findCol(p2);
-            var p2B = findCol(p2);
-
-            var p3R = findRow(p3);
-            var p3C = findCol(p3);
-            var p3B = findCol(p3);
-
-            var p4R = findRow(p4);
-            var p4C = findCol(p4);
-            var p4B = findCol(p4);
-
-            if(p1 ==p2||p1==p3 ||p1==p4 || p2 ==p3 ||p3==p4 ||p2==p4)
+            if(x ==y)
             {
-
-            }
-
-            else
-            {
-                if (!commonCheck(p1R, p2R, p3R, p4R))
-                {
-                    Console.WriteLine("3 ROW");
-                    return false;
-                }
-
-                if (!commonCheck(p1C, p2C, p3C, p4C))
-                {
-                    Console.WriteLine("3 COL");
-                    return false;
-                }
-
-                if (!commonCheck(p1B, p2B, p3B, p4B))
-                {
-                    Console.WriteLine("3 BLOCK");
-                    return false;
-                }
-            }
-            
-
-            if (share(p1, p2, p3, p4) == false)
-            {
-                Console.WriteLine("SHARE FALSE");
                 return false;
             }
-            if ( p2R ==p3R || p2C ==p3C || p2B==p3B)
+
+            if( r1 ==r2 || c1==c2 ||b1 ==b2)
             {
-                Console.WriteLine("2 and 3");
                 return true;
             }
 
-            if (p2R == p4R || p2C == p4C || p2B == p4B)
-            {
-                Console.WriteLine("2 and 4");
-                return true;
-            }
-
-            if (p1R == p4R || p1C == p4C || p1B == p4B)
-            {
-                Console.WriteLine("1 and 4");
-                return true;
-            }
-            
-            
             return false;
         }
-
-        public bool share(string a, string b, string c, string d)
+        public List<string> FindIntersect(string p1, string p2)
         {
-            if(a == b || c==d )
-            {
-                Console.WriteLine("DUPLICATE");
-                Console.WriteLine(a + " / " + b + " / " + c + " / " + d);
-                return false;
-            }
-
-            if(a ==c &&b==d)
-            {
-                Console.WriteLine("SAME ");
-                Console.WriteLine(a + " / " + b + " / " + c + " / " + d);
-                return false;
-            }
-
-            return true;
-        }
-
-        public int findRow(string p1)
-        {
-            Grid.SplitTextCoordinate(p1, out int i, out int j);
-            return i;
-        }
-
-        public int findCol(string p1)
-        {
-            Grid.SplitTextCoordinate(p1, out int i, out int j);
-            return j;
-        }
-
-        public int findBlock(string p1)
-        {
-            Grid.SplitTextCoordinate(p1, out int i, out int j);
-            var b =Grid.GetBlockFromCoOrdinates(i, j);
-            return b;
-        }
-
-        public string findIntersect(string p1, string p2)
-        {
+            List<string> ans = new List<string>();
             Grid.SplitTextCoordinate(p1, out int i1, out int j1);
             Grid.SplitTextCoordinate(p2, out int i2, out int j2);
 
-            if( i1==i2)
+           
+            for(int a = 0; a<9; a++)
             {
-                return "row";
+                for (int b = 0; b < 9; b++)
+                {
+                    string x = a + ";" + b;
+                    bool aa = IsSameRowColumnOrBlock(x, p1);
+                    bool bb = IsSameRowColumnOrBlock(x, p2);
+
+                    if(aa &&bb)
+                    {
+                        ans.Add(x);
+                    }
+                }
             }
+            var co1 = i1 + ";" + j2;
+            var co2 = i2 + ";" + j1;
 
-            if(j1==j2)
-            {
-                return "col";
-            }
-
-            var b1 = Grid.GetBlockFromCoOrdinates(i1, j1);
-            var b2 = Grid.GetBlockFromCoOrdinates(i2, j2);
-
-            if(b1 ==b2)
-            {
-                return "block";
-            }
-
-            var c1 = i1 + ";" + j2;
-            var c2 = i2 + ";" + j1;
-
-            return c1 + " " + c2;
+            return ans;
         }
     }
+
+  
 }
