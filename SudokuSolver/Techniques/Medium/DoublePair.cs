@@ -9,10 +9,69 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
     {
         public void DoublePair()
         {
-            for(int i = 1; i<9; i++)
+            MultiLine(true);
+        }
+
+        public List<string> coordinatesOfPairs(int a, int b, string name)
+        {
+            List<string> rows = new List<string>();
+
+            for(int i = 0; i<9; i++)
             {
-                doublePairTechnique(i);
+                int c = 0;
+                for (int j = 0; j<9; j++)
+                {
+                    var check = new List<int>(){ };
+                    if(name == Grid.ROW)
+                    {
+                        check = Grid.Rows[i].Cells[j].Possibilities;
+                    }
+
+                    if (name == Grid.COLUMNS)
+                    {
+                        check = Grid.Columns[i].Cells[j].Possibilities;
+                    }
+
+                    if (name == Grid.BLOCKS)
+                    {
+                        check = Grid.Blocks[i].Cells[j].Possibilities;
+                    }
+                    
+                    var isMatch = doPossibilitiesMatch(a, b, check);
+                    if(isMatch)
+                    {
+                        c += 1;
+                    }
+
+                }
+                
+                if( c ==2)
+                {
+                    Console.WriteLine("ROW DOUBLE PAIR " + a + " " + b);
+                }
             }
+            return rows;
+        }
+
+      
+
+        public bool doPossibilitiesMatch(int a, int b, List<int> poss)
+        {
+            if(poss.Count!=2)
+            {
+                return false;
+            }
+
+            var aa = poss[0];
+            var bb = poss[1];
+
+            if(( a ==aa && bb ==b) || (a ==bb && b ==aa))
+            {
+                return true;
+            }
+
+            return false;
+
         }
 
         public List<PairBlock> pairBlockList = new List<PairBlock>();
@@ -410,8 +469,10 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         public List<int> findAdjoiningBlocks(int number)
         {
-            var full = number / 3;
-            var mod = number % 3;
+            var full = number / 3;//3
+            var mod = number % 3;//3
+
+            Console.WriteLine("FULL " + full + " mod " + mod);
             var ans = new List<int>();
             for(int i = 0; i<9; i++)
             {
@@ -422,7 +483,11 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
                 if( i/3 ==full || i%3==mod)
                 {
-                    ans.Add(i);
+                    if(i>=0 && i<=9)
+                    {
+                        ans.Add(i);
+                    }
+                    
                 }
             }
 

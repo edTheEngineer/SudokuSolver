@@ -128,7 +128,11 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         }
         public void RemovePossibilities(int number)//Remove Possibilities from a Cell
         {
-            Possibilities.RemoveAll(x=>x==number);
+            if(Possibilities.Count>1 && Number ==0)
+            {
+                Possibilities.RemoveAll(x => x == number);
+            }
+            
         }
 
       

@@ -116,9 +116,9 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         private void CountPossibilitiesPerNumber(int number)
         {
-            CountPossibilities(number, Grid.Rows, "ROWS");
-            CountPossibilities(number, Grid.Columns, "COLUMNS");
-            CountPossibilities(number, Grid.Blocks, "BLOCKS");
+            CountPossibilities(number, Grid.Rows, Grid.ROW);
+            CountPossibilities(number, Grid.Columns, Grid.COLUMNS);
+            CountPossibilities(number, Grid.Blocks, Grid.BLOCKS);
         }
         private void CountPossibilities(int number, Group[] group, string name)
         {

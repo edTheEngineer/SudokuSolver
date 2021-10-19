@@ -9,6 +9,8 @@ using Newtonsoft.Json.Converters;
 namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 {
     public class AdvancedGrid
+
+
     {
         [JsonProperty("Rows")] //NEED FOR JSON DESERIALISATION
         public Group[] Rows { get; set; } //Row of Cells
@@ -57,6 +59,9 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         public List<string> Techniques { get; set; } // Property to hold Techniques used to solve a Sudoku
 
+        public string ROW = "_ROWS";
+        public string COLUMNS = "_COLUMNS";
+        public string BLOCKS = "_BLOCKS";
         private void CreateCellsToAdd()
         {
             var filledInCells = new List<int>();
@@ -177,7 +182,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         public void RemovePossibilitiesFromCell(int i, int j, string name)
         {
             GetCoOrdinatesFromName(i, j, name, out int r1, out int r2, out int b1, out int b2, out int c1, out int c2);
-
+            //Console.WriteLine("Remove all " +name + " "+ r1 + " " + r2 + " , " + c1 + " " + c2 + " , " + b1 + " " + b2);
             Rows[r1].Cells[r2].RemoveAllPossibilities();
             Columns[c1].Cells[c2].RemoveAllPossibilities();
             Blocks[b1].Cells[b2].RemoveAllPossibilities();
@@ -192,17 +197,17 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             b2 = 0;
             c1 = 0;
             c2 = 0;
-            if (name == "ROWS")
+            if (name == ROW)
             {
                 RowToCoOrdinates(i, j, out r1, out r2, out c1, out c2, out b1, out b2);
 
             }
-            if (name == "COLUMNS")
+            if (name == COLUMNS)
             {
                 ColumnToCoOrdinates(i, j, out r1, out r2, out c1, out c2, out b1, out b2);
             }
 
-            if (name == "BLOCKS")
+            if (name == BLOCKS)
             {
 
                 BlockToCoOrdinates(i, j, out r1, out r2, out c1, out c2, out b1, out b2);
@@ -497,29 +502,54 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
 
 
-        public List<string> GetIntersectingCellsInGroup(int xCoordinate, int yCoordinate, string groupName) //Gets Cells that Intersect with the current cell, including the current cells.
+        public List<string> GetIntersectingCellsInGroup(int xCoordinate, int yCoordinate, string groupName, bool excludeCurrent) //Gets Cells that Intersect with the current cell, including the current cells.
         {
 
             List<string> answer = new List<string>();
 
-            if (groupName == "C")
+            if (groupName == COLUMNS)
             {
                 for (int colNumber = 0; colNumber < GroupSize; colNumber++)
                 {
-                    answer.Add(colNumber + ":" + yCoordinate);
+                    if (excludeCurrent)
+                    {
+                        if(colNumber !=xCoordinate)
+                        {
+                            answer.Add(colNumber + ":" + yCoordinate);
+                        }
+
+                    }
+
+                    else
+                    {
+                        answer.Add(colNumber + ":" + yCoordinate);
+                    }
+                    
                 }
             }
 
-            if (groupName == "R")
+            if (groupName == ROW)
             {
                 //GET COLS
                 for (int rowNumber = 0; rowNumber < GroupSize; rowNumber++)
                 {
-                    answer.Add(xCoordinate + ":" + rowNumber);
+                    if(excludeCurrent)
+                    {
+                        if(rowNumber!=yCoordinate)
+                        {
+                            answer.Add(xCoordinate + ":" + rowNumber);
+                        }
+                    }
+
+                    else
+                    {
+                        answer.Add(xCoordinate + ":" + rowNumber);
+                    }
+                    
                 }
             }
 
-            if (groupName == "B")
+            if (groupName == BLOCKS)
             {
                 int block = GetBlockFromCoOrdinates(xCoordinate, yCoordinate);
                 var cells = CellsInBlock(block);
@@ -598,6 +628,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         public void BlockToMain(int x, int y, out int xx, out int yy)
         {
+            //Console.WriteLine(x + "////" + y);
             List<int> cellsInBlock = GetCellsInBlock(x+1);
             var index = cellsInBlock[y];
             GetCoOrdinatesOfCell(index, out xx, out yy);
@@ -658,11 +689,11 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         {
             List<string> ans = new List<string>();
             Console.WriteLine("ROWS");
-            var r = ReturnInvalidDuplicates(Rows, "R");
+            var r = ReturnInvalidDuplicates(Rows, ROW);
             Console.WriteLine("COLS");
-            var c = ReturnInvalidDuplicates(Columns, "C");
+            var c = ReturnInvalidDuplicates(Columns, COLUMNS);
             Console.WriteLine("BLOCKS");
-            var b = ReturnInvalidDuplicates(Blocks, "B");
+            var b = ReturnInvalidDuplicates(Blocks, BLOCKS);
             ans.AddRange(r);
             ans.AddRange(c);
             ans.AddRange(b);
@@ -711,31 +742,31 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             return trueAns;
         }
 
-        public List<string> buildCoordinates(List<int> ed, int indexIn, string g)
+        public List<string> buildCoordinates(List<int> coordinates, int indexIn, string groupName)
         {
             List<string> ans = new List<string>();
 
-            for(int i = 0; i<ed.Count; i++)
+            for(int i = 0; i<coordinates.Count; i++)
             {
-                if(g =="R")
+                if(groupName ==ROW)
 
                 {
                    
-                       var check = indexIn + ";" + ed[i];
+                       var check = indexIn + ";" + coordinates[i];
                     ans.Add(check);
                 }
 
-                if(g =="B")
+                if(groupName ==BLOCKS)
                 {
 
-                    var oneD = GetOneDRowIndexFromBlockCoordinates(indexIn, ed[i]);
+                    var oneD = GetOneDRowIndexFromBlockCoordinates(indexIn, coordinates[i]);
                     GetCoOrdinatesOfCell(oneD, out int a, out int b);
                     ans.Add(a + ";" + b);
                 }
 
-                if(g =="C")
+                if(groupName ==COLUMNS)
                 {
-                    var check = ed[i] + ";" + indexIn;
+                    var check = coordinates[i] + ";" + indexIn;
                     ans.Add(check);
                 }
             }

@@ -339,25 +339,25 @@ return "";
 
                                     if ((i == 2 || i == 5) && (j == 2 || j == 5))
                                     {
-                            <td class="thirdColumnRow"><input class="@IsIntersectedCell(i,j) @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)  @Highlight(i,j)" oninput="validateNumbers(this.id)" name="@idName" min="0" max="9" size="1" maxlength="2" onchange="EnterNumbers(@i, @j)" id="@idName" type="text" value="@showNumberV(i,j)" /></td>
+                            <td class="thirdColumnRow"><input class="@GetClassForSolvedCells(i, j)  @Highlight(i,j)" oninput="validateNumbers(this.id)" name="@idName" min="0" max="9" size="1" maxlength="2" onchange="EnterNumbers(@i, @j)" id="@idName" type="text" value="@showNumberV(i,j)" /></td>
                                     }
 
                                     else if (i == 2 || i == 5)
 
                                     {
-                            <td class="thirdRow"><input class=" @IsIntersectedCell(i,j) @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)  @Highlight(i,j) "size="1" oninput="validateNumbers(this.id)" name="@idName" min="0" max="9" maxlength="2" onchange="EnterNumbers(@i, @j)" id="@idName" type="text" value="@showNumberV(i,j)" /></td>
+                            <td class="thirdRow"><input class="@GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)  @Highlight(i,j) "size="1" oninput="validateNumbers(this.id)" name="@idName" min="0" max="9" maxlength="2" onchange="EnterNumbers(@i, @j)" id="@idName" type="text" value="@showNumberV(i,j)" /></td>
                                     }
 
                                     else if (j == 2 || j == 5)
 
                                     {
-                            <td class="thirdColumn"><input class=" @IsIntersectedCell(i,j) @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)  @Highlight(i,j)"  size="1" oninput="validateNumbers(this.id)" name="@idName" min="0" max="9" maxlength="2" onchange="EnterNumbers(@i, @j)" id="@idName" type="text" value="@showNumberV(i,j)" /></td>
+                            <td class="thirdColumn"><input class=" @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)  @Highlight(i,j)"  size="1" oninput="validateNumbers(this.id)" name="@idName" min="0" max="9" maxlength="2" onchange="EnterNumbers(@i, @j)" id="@idName" type="text" value="@showNumberV(i,j)" /></td>
                                     }
 
                                     else
 
                                     {
-                            <td><input class= "@IsIntersectedCell(i,j) @GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)  @Highlight(i,j)" size="1" maxlength="2" oninput="validateNumbers(this.id)" name="@idName" min="0" max="9" onchange="EnterNumbers(@i, @j)" id="@idName" type="text" value="@showNumberV(i,j)" /></td>
+                            <td><input class= "@GetClassForSelectedCells(i,j) @GetClassForSolvedCells(i, j)  @Highlight(i,j)" size="1" maxlength="2" oninput="validateNumbers(this.id)" name="@idName" min="0" max="9" onchange="EnterNumbers(@i, @j)" id="@idName" type="text" value="@showNumberV(i,j)" /></td>
                                     }
 
 

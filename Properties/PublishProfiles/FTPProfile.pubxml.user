@@ -29,25 +29,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/26/2021 15:17:41</publishTime>
     </File>
     <File Include="RazorPagesSudoku.deps.json">
-      <publishTime>09/07/2021 10:23:30</publishTime>
+      <publishTime>10/13/2021 08:19:46</publishTime>
     </File>
     <File Include="RazorPagesSudoku.dll">
-      <publishTime>09/07/2021 10:23:24</publishTime>
+      <publishTime>10/13/2021 08:19:00</publishTime>
     </File>
     <File Include="RazorPagesSudoku.exe">
-      <publishTime>09/07/2021 10:23:24</publishTime>
+      <publishTime>10/13/2021 08:19:00</publishTime>
     </File>
     <File Include="RazorPagesSudoku.pdb">
-      <publishTime>09/07/2021 10:23:24</publishTime>
+      <publishTime>10/13/2021 08:19:00</publishTime>
     </File>
     <File Include="RazorPagesSudoku.runtimeconfig.json">
       <publishTime>06/15/2021 15:50:06</publishTime>
     </File>
     <File Include="RazorPagesSudoku.Views.dll">
-      <publishTime>09/07/2021 10:23:30</publishTime>
+      <publishTime>10/13/2021 08:19:46</publishTime>
     </File>
     <File Include="RazorPagesSudoku.Views.pdb">
-      <publishTime>09/07/2021 10:23:30</publishTime>
+      <publishTime>10/13/2021 08:19:46</publishTime>
     </File>
     <File Include="System.Web.Helpers.dll">
       <publishTime>11/28/2018 13:04:24</publishTime>
@@ -68,16 +68,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/28/2018 13:04:24</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>09/07/2021 10:26:10</publishTime>
+      <publishTime>10/13/2021 08:22:02</publishTime>
     </File>
     <File Include="wwwroot/css/site.css">
-      <publishTime>08/25/2021 14:07:16</publishTime>
+      <publishTime>09/07/2021 13:05:10</publishTime>
     </File>
     <File Include="wwwroot/favicon.ico">
       <publishTime>05/06/2021 11:57:30</publishTime>
     </File>
     <File Include="wwwroot/js/site.js">
-      <publishTime>09/07/2021 10:17:17</publishTime>
+      <publishTime>07/09/2021 15:50:16</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css">
       <publishTime>05/06/2021 11:57:30</publishTime>

@@ -26,50 +26,56 @@ containerToHide.style.display = chkYes.checked ? "block" : "none";
 containerToShow.style.display = chkYes.checked ? "none" : "block";
 }
 
-function EnterNumbers(i,j) {
 
+function EnterNumbers(i,j) {
     var id = "myInput" + ";" + i + ";" + j;
-    console.log(id);
     var input = document.getElementById(id);
-    console.log(input.value);
 }
 
-function IsGridValid(id) {
-    console.log("VALIDATION TEST");
+function changeArray(i, j, arr) {
 
-    let aaa = id.substring(8, 9);
-    let bbb = id.substring(10, 11);
-    console.log("[ " + aaa + " , " + bbb + " ] ");
-    unhighlightErrorCells(aaa, bbb);
-    //myInput; "+i + "; " + j;
-    //Check Rows
+    var idName = "myInput;" + i + ";" + j;
+    var element = document.getElementById(idName);
+    var elementValue = element.value;
+    if (elementValue == "") {
+        arr.push(0);
+    }
+    else {
+        arr.push(parseInt(elementValue));
+    }
+
+    return arr;
+}
+
+function checkIsValid(arr, firstIndex, secondIndex) {
+
+    let isV = isValid(arr);
+    if (!isV) {
+        document.getElementById('typedInvalid').style.visibility = 'visible';
+        highlightErrorCells(firstIndex, secondIndex, true);
+        return false;
+    }
+
+    return true;
+}
+function IsGridValid(id) {
+
+    let firstIndex = id.substring(8, 9);
+    let secondIndex = id.substring(10, 11);
+    unhighlightErrorCells(firstIndex, secondIndex);
+
+    //Rows
     for (let i = 0; i < 9; i++)
     {
         var rows = [];
         for (let j = 0; j < 9; j++)
         {
-            var idName = "myInput;" + i + ";" + j;
-            var element = document.getElementById(idName);
-            var elementValue = element.value;
-            if (elementValue == "")
-            {
-                rows.push(0);
-            }
-            else
-            {
-                rows.push(parseInt(elementValue));
-            }
-
+            rows = changeArray(i, j, rows);
         }
-        let isV = isValid(rows);
-        console.log(isV);
-        if (!isV) {
-            document.getElementById('typedInvalid').style.visibility = 'visible';
-            highlightErrorCells(aaa,bbb, true);
+        let validMarker = checkIsValid(rows, firstIndex, secondIndex);
+        if (!validMarker) {
             return false;
         }
-
-        //console.log(isV+ i);
     }
 
     //Check Cols
@@ -78,27 +84,13 @@ function IsGridValid(id) {
         var cols = [];
         for (let i = 0; i < 9; i++)
         {
-            var idName = "myInput;" + i + ";" + j;
-            var element = document.getElementById(idName);
-            var elementValue = element.value;
-            if (elementValue == "")
-            {
-                cols.push(0);
-            }
-            else {
-                cols.push(parseInt(elementValue));
-            }
+            cols = changeArray(i, j, cols);
 
         }
-        let isV = isValid(cols);
-        console.log(isV);
-        if (!isV) {
-            document.getElementById('typedInvalid').style.visibility = 'visible';
-            highlightErrorCells(aaa,bbb, true);
+        let validMarker = checkIsValid(cols, firstIndex, secondIndex);
+        if (!validMarker) {
             return false;
         }
-
-        //console.log(isV+ i);
     }
 
     //Check Blocks
@@ -116,31 +108,15 @@ function IsGridValid(id) {
                 let b = parseInt(j / 3);
                 var ijCheck = a + "-" + b;
                 if (ijCheck == check) {
-                   // console.log("BLOCK INDEX CHECK " +ijCheck + " " + i + " / " + j);
-                    var idName = "myInput;" + i + ";" + j;
-                    var element = document.getElementById(idName);
-                    var elementValue = element.value;
-                    if (elementValue == "") {
-                        blockList.push(0);
-                    }
-                    else {
-                        blockList.push(parseInt(elementValue));
-                    }
+                    blockList = changeArray(i, j, blockList);
 
                 }
 
-                //console.log(isV+ i);
             }
 
         }
-
-        let isV = isValid(blockList);
-        console.log("BLOCK INDEX " + a);
-        console.log(blockList);
-        console.log(isV);
-        if (!isV) {
-            document.getElementById('typedInvalid').style.visibility = 'visible';
-            highlightErrorCells(aaa,bbb, true);
+        let validMarker = checkIsValid(blockList, firstIndex, secondIndex);
+        if (!validMarker) {
             return false;
         }
     }
@@ -149,12 +125,42 @@ function IsGridValid(id) {
 
 }
 
+function findCellsToHighlight(a,b, cells, num) {
+    var idName = "myInput;" + a + ";" + b;
+    var element = document.getElementById(idName);
+    var elementValue = element.value;
+    if (elementValue == num) {
+        cells.push(idName);
+    }
+
+    return cells;
+}
+
+function highlightIntersectingCells(cells, isHighlight) {
+    if (cells.length > 1) {
+
+        for (let c = 0; c < cells.length; c++) {
+            var idNameH = cells[c];
+            var elementH = document.getElementById(idNameH);
+            if (isHighlight) {
+                elementH.style.backgroundColor = "#ff6666";
+                elementH.style.borderColor = "#ff6666";
+            }
+
+            else {
+                elementH.style.backgroundColor = "";
+                elementH.style.borderColor = "";
+            }
+
+        }
+    }
+}
 function highlightErrorCells(i, j, isHighlight) {
 
     if (!isHighlight) {
-        for (let abc = 0; abc < 9; abc++) {
-            for (let cde = 0; cde < 9; cde++) {
-                var idNames = "myInput;" + abc + ";" + cde;
+        for (let iCoordinate = 0; iCoordinate < 9; iCoordinate++) {
+            for (let jCoordinate = 0; jCoordinate < 9; jCoordinate++) {
+                var idNames = "myInput;" + iCoordinate + ";" + jCoordinate;
                 var element = document.getElementById(idNames);
                 var elementValue = element.value;
                 element.style.backgroundColor = "";
@@ -169,32 +175,10 @@ function highlightErrorCells(i, j, isHighlight) {
             numC = 0;
             var cells = [];
             for (let b = 0; b < 9; b++) {
-
-
-                var idName = "myInput;" + a + ";" + b;
-                var element = document.getElementById(idName);
-                var elementValue = element.value;
-                if (elementValue == num) {
-                    numC += 1;
-                    cells.push(idName);
-                }
+                cells = findCellsToHighlight(a, b, cells, num);
             }
 
-            if (numC > 1) {
-
-                for (let c = 0; c < cells.length; c++) {
-                    var idNameH = cells[c];
-                    var elementH = document.getElementById(idNameH);
-                    if (isHighlight) {
-                        elementH.style.backgroundColor = "red";
-                    }
-
-                    else {
-                        element.style.backgroundColor = "";
-                    }
-                    
-                }
-            }
+            highlightIntersectingCells(cells, isHighlight);
         }
 
         //COLS
@@ -203,31 +187,10 @@ function highlightErrorCells(i, j, isHighlight) {
             numC = 0;
             var cells = [];
             for (let a = 0; a < 9; a++) {
-
-
-                var idName = "myInput;" + a + ";" + b;
-                var element = document.getElementById(idName);
-                var elementValue = element.value;
-                if (elementValue == num) {
-                    numC += 1;
-                    cells.push(idName);
-                }
+                cells = findCellsToHighlight(a, b, cells, num);
             }
 
-            if (numC > 1) {
-
-                for (let c = 0; c < cells.length; c++) {
-                    var idNameH = cells[c];
-                    var elementH = document.getElementById(idNameH);
-                    if (isHighlight) {
-                        elementH.style.backgroundColor = "red";
-                    }
-
-                    else {
-                        element.style.backgroundColor = "";
-                    }
-                }
-            }
+            highlightIntersectingCells(cells, isHighlight);
         }
 
         // BLOCKS
@@ -246,13 +209,7 @@ function highlightErrorCells(i, j, isHighlight) {
                     var ijCheck = co1 + "-" + co2;
                     if (ijCheck == check) {
                         console.log(ijCheck);
-                        var idNames = "myInput;" + a + ";" + b;
-                        var element = document.getElementById(idNames);
-                        var elementValue = element.value;
-                        if (elementValue == num) {
-                            numC += 1;
-                            cells.push(idNames);
-                        }
+                        cells = findCellsToHighlight(a, b, cells, num);
                     }
 
                 }
@@ -260,21 +217,7 @@ function highlightErrorCells(i, j, isHighlight) {
 
 
             console.log("NUM = " +num + " BLOCK No " + bl + " = COUNT OF " + numC);
-            if (numC > 1) {
-
-                for (let c = 0; c < cells.length; c++) {
-                    var idNameH = cells[c];
-                    console.log("ADD : " + idNameH)
-                    var elementH = document.getElementById(idNameH);
-                    if (isHighlight) {
-                        elementH.style.backgroundColor = "red";
-                    }
-
-                    else {
-                        element.style.backgroundColor = "";
-                    }
-                }
-            }
+            highlightIntersectingCells(cells, isHighlight);
         }
     }   
 }
@@ -305,7 +248,6 @@ function isValid(arr) {
    
     return true;
 }
-
 
 
 function validateNumbers(id) {

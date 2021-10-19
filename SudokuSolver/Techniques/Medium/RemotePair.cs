@@ -10,7 +10,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         {
             NakedPairSolve(false);
             var uniqueList = FindCoordinatesOfNakedPairs();
-            Console.WriteLine(string.Join("=", uniqueList));
+           // Console.WriteLine(string.Join("=", uniqueList));
             ListHandling l = new ListHandling();
             var chain = l.FindRemotePairChain(uniqueList);
             var filteredChain = FilterChain(chain);
@@ -154,8 +154,8 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                 allPairs.Add(pair2);
             }
 
-            Console.WriteLine("ALL PAIRS" + allPairs.Count);
-            Console.WriteLine("pairList" + pairListC.Count);
+           // Console.WriteLine("ALL PAIRS" + allPairs.Count);
+           // Console.WriteLine("pairList" + pairListC.Count);
             List<string> uniqueList = allPairs.Distinct().ToList();
             return uniqueList;
         }

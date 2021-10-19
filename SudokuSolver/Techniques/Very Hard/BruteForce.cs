@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using RazorPagesSudoku.SudokuSolver.CoreClasses;
 
 namespace RazorPagesSudoku.SudokuSolver.Techniques
 {

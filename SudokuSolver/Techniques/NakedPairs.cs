@@ -16,19 +16,19 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         public void XToMain(string name, int i, int pairY1, int pairY2, out int x1, out int y1, out int x2, out int y2)
         {
             x1 = 0; x2 = 0; y1 = 0; y2 = 0;
-            if(name =="ROWS")
+            if(name ==Grid.ROW)
             {
                 Grid.RowToMain(i, pairY1, out  x1, out  y1);
                 Grid.RowToMain(i, pairY2, out  x2, out  y2);
             }
 
-            if (name == "COLS")
+            if (name == Grid.COLUMNS)
             {
                 Grid.ColumnToMain(i, pairY1, out x1, out y1);
                 Grid.ColumnToMain(i, pairY2, out x2, out y2);
             }
 
-            if (name == "BLOCKS")
+            if (name == Grid.BLOCKS)
             {
                 Grid.BlockToMain(i, pairY1, out x1, out y1);
                 Grid.BlockToMain(i, pairY2, out x2, out y2);
@@ -48,11 +48,11 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         } //Finds if 2 Coordinates exist on the same row or block, and same column & block
 
         
-        private void GetIntersectingCellLists(int x1, int y1, out List<string> intersectBlocks, out List<string> intersectColumns, out List<string> intersectRows)
+        private void GetIntersectingCellLists(int x1, int y1,  bool isExclude, out List<string> intersectBlocks, out List<string> intersectColumns, out List<string> intersectRows)
         {
-            intersectBlocks = Grid.GetIntersectingCellsInGroup(x1, y1, "B");
-            intersectColumns = Grid.GetIntersectingCellsInGroup(x1, y1, "C");
-            intersectRows = Grid.GetIntersectingCellsInGroup(x1, y1, "R");
+            intersectBlocks = Grid.GetIntersectingCellsInGroup(x1, y1, Grid.BLOCKS, isExclude);
+            intersectColumns = Grid.GetIntersectingCellsInGroup(x1, y1, Grid.COLUMNS, isExclude);
+            intersectRows = Grid.GetIntersectingCellsInGroup(x1, y1,Grid.ROW, isExclude);
            
         }// Creates a list of the cells that intersect with a particular coordinate
 
@@ -66,9 +66,9 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         
         public void NakedPairSolve(bool isSolve) // Examines the Naked Pairs in Blocks, Rows, and Columns
         {
-            NakedPairCommon(Grid.Blocks, isSolve, "BLOCKS");
-            NakedPairCommon(Grid.Rows, isSolve, "ROWS");
-           NakedPairCommon(Grid.Columns, isSolve, "COLS");
+            NakedPairCommon(Grid.Blocks, isSolve, Grid.BLOCKS);
+            NakedPairCommon(Grid.Rows, isSolve, Grid.ROW);
+           NakedPairCommon(Grid.Columns, isSolve, Grid.COLUMNS);
 
         }
 
@@ -221,16 +221,16 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         public void addIntersectLists( int y1, int y2, ref List<string>intersectRows, ref List<string> intersectColumns, ref List<string> intersectBlocks,string name)
         {
-            if(name=="ROWS")
+            if(name==Grid.ROW)
             {
                 intersectRows.AddRange(intersectBlocks);
             }
 
-            if (name == "COLS")
+            if (name == Grid.COLUMNS)
             {
                 intersectColumns.AddRange(intersectBlocks);
             }
-            if (name == "BLOCKS")
+            if (name == Grid.BLOCKS)
             {
                 if (y1 == y2)
                 {
@@ -246,7 +246,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         public void printPairs(int y1, int y2, ref List<string> intersectRows, ref List<string> intersectColumns, ref List<string> intersectBlocks, string name)
         {
-            if (name == "ROWS")
+            if (name == Grid.ROW)
             {
                 foreach(var x in intersectRows)
                 {
@@ -254,14 +254,14 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                 }
             }
 
-            if (name == "COLS")
+            if (name == Grid.COLUMNS)
             {
                 foreach (var x in intersectColumns)
                 {
                     Console.WriteLine(x);
                 }
             }
-            if (name == "BLOCKS")
+            if (name == Grid.BLOCKS)
             {
                 foreach (var x in intersectBlocks)
                 {
@@ -273,16 +273,16 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         }
         public void removex(int num1, int num2, ref List<string> intersectRows, ref List<string> intersectColumns, ref List<string> intersectBlocks, string name)
         {
-            if (name == "ROWS")
+            if (name == Grid.ROW)
             {
                 removePoss(intersectRows, num1, num2);
             }
 
-            if (name == "COLS")
+            if (name == Grid.COLUMNS)
             {
                 removePoss(intersectColumns, num1, num2);
             }
-            if (name == "BLOCKS")
+            if (name == Grid.BLOCKS)
             {
                 removePoss(intersectBlocks, num1, num2);
             }
@@ -332,7 +332,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     SplitPairIntoNumbers(pairName, out var num1, out var num2);
                     FindLocationNakedPair(g[i], pairName, out var pairY1, out var pairY2);
                     XToMain(name, i, pairY1, pairY2, out int x1, out int y1, out int x2, out int y2);
-                    GetIntersectingCellLists(x1, y1, out var intersectBlocks, out var intersectColumns, out var intersectRows);
+                    GetIntersectingCellLists(x1, y1, false, out var intersectBlocks, out var intersectColumns, out var intersectRows);
                     bool isCommonCoordinatesV = IsCommonCoordinates(x1, y1, x2, y2);
                     //MAKE COMMON
                     if (isCommonCoordinatesV)

@@ -12,9 +12,9 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             for (int i = 1; i <= 9; i++)
             {
 
-                commonClaiming(i, "COLUMNS");
-                commonClaiming(i, "BLOCKS");
-                commonClaiming(i, "ROWS");
+                commonClaiming(i, Grid.COLUMNS);
+                commonClaiming(i, Grid.BLOCKS);
+                commonClaiming(i, Grid.ROW);
 
             }
 
@@ -22,17 +22,17 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         public void getPossibilityGroups(int i, int j, string name, out List<int> possibilities)
         {
-            if(name =="ROWS")
+            if(name ==Grid.ROW)
             {
                 possibilities = Grid.Rows[i].Cells[j].Possibilities;
             }
 
-            if (name == "COLUMNS")
+            if (name == Grid.COLUMNS)
             {
                 possibilities = Grid.Columns[i].Cells[j].Possibilities;
             }
 
-            if (name == "BLOCKS")
+            if (name == Grid.BLOCKS)
             {
                 possibilities = Grid.Blocks[i].Cells[j].Possibilities;
             }
@@ -45,17 +45,17 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         public void commonClaiming(int number, string name)
         {
-            if(name =="ROWS")
+            if(name ==Grid.ROW)
             {
                 rowColumnClaiming(number, true);
             }
 
-            if (name == "COLUMNS")
+            if (name == Grid.COLUMNS)
             {
                 rowColumnClaiming(number, false);
             }
 
-            if (name == "BLOCKS")
+            if (name == Grid.BLOCKS)
             {
                 boxClaiming(number);
             }

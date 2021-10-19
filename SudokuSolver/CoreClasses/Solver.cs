@@ -94,6 +94,8 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             if (IsMinimum)
             {
 
+                
+
                 for (int i = 0; i < 81; i++)
                 {
                     if (Grid.IsValidAndIsCompleteSudoku())
@@ -102,11 +104,11 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                         IsValid = true;
                         break;
                     }
-                    ns.RemotePairTechnique();
+                    ns.Claiming();
                     Grid = ns.Grid;
                 }
 
-                
+
 
                 for (int i = 0; i < 81; i++)
                 {
@@ -132,6 +134,91 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                         break;
                     }
                     ns.DoublePair();
+                    Grid = ns.Grid;
+                }
+
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.NakedTriple();
+                    Grid = ns.Grid;
+                }
+
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.NakedQuad();
+                    Grid = ns.Grid;
+                }
+
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.HiddenTriples();
+                    Grid = ns.Grid;
+                }
+
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.XWing();
+                    Grid = ns.Grid;
+                }
+
+
+
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.XYWing();
+                    Grid = ns.Grid;
+                }
+
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.XYZWing();
+                    Grid = ns.Grid;
+                }
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.HiddenQuads();
                     Grid = ns.Grid;
                 }
                 for (int i = 0; i < 81; i++)
@@ -160,8 +247,30 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                     Grid = ns.Grid;
                 }
 
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.MultiLine();
+                    Grid = ns.Grid;
+                }
 
-                
+                for (int i = 0; i < 81; i++)
+                {
+                    if (Grid.IsValidAndIsCompleteSudoku())
+                    {
+                        IsSolved = true;
+                        IsValid = true;
+                        break;
+                    }
+                    ns.RemotePairTechnique();
+                    Grid = ns.Grid;
+                }
+
 
                 if (Grid.IsValidAndIsCompleteSudoku())
                 {
@@ -173,7 +282,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
                 else
                 {
-
+                    
                     ns.SolveBruteForce();
                     Grid = ns.Grid;
 
