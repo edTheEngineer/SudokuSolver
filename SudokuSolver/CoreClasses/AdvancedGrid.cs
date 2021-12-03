@@ -35,6 +35,10 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         [JsonProperty("BlockWidth")]
         public int BlockWidth { get; set; }
 
+        [JsonProperty("UserAttempts")]
+        public int UserAttempts { get; set; }
+
+
         [JsonProperty("BlockHeight")]
         public int BlockHeight { get; set; }
         [JsonProperty("SudokuGrid")]
@@ -52,7 +56,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             Columns = SetCols(numbersIn);
             Blocks = SetBlocks(numbersIn);
             SudokuGrid = numbersIn;
-            EliminatePossibilitiesInGroups();
+            EliminatePossibilitiesInGroups("");
             CreateCellsToAdd();
             Techniques = new List<string>();
         }
@@ -229,14 +233,23 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             var i = CellsInBlock(x+1);
             return i[y];
         }
-        public void EliminatePossibilitiesInGroups()
+        public void EliminatePossibilitiesInGroups(string techniqueName)
         {
-            for (int i= 0; i < 9; i++)
-            {
-                Rows[i].EliminatePossibilitiesInGroup();
-                Columns[i].EliminatePossibilitiesInGroup();
-                Blocks[i].EliminatePossibilitiesInGroup();
-            }
+
+            
+                for (int i = 0; i < 9; i++)
+                {
+                    Rows[i].EliminatePossibilitiesInGroup();
+                    Columns[i].EliminatePossibilitiesInGroup();
+                    Blocks[i].EliminatePossibilitiesInGroup();
+                }
+
+                if (techniqueName != "")
+                {
+                    Techniques.Add("Remove ALL Possibility , Technique is " + techniqueName + ".");
+                }
+            
+            
         } //Eliminate Possibilities in Group where the Number is present
         public AdvancedGrid() //Set up a Grid with No Cells
         {
@@ -382,22 +395,33 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             SetNumber(i, j, num, techniqueName);
             if (num != 0)
             {
-                RemovePossibilitiesFromIntersectingCells();
+                RemovePossibilitiesFromIntersectingCells(techniqueName);
             }
 
         }
 
-        
-        public void SetNumber(int i, int j, int num, string techniqueName)
+        public void SetColour(int i, int j, string colour)
         {
             RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
-            Rows[r1].Cells[r2].SetNumber(num);
-            Rows[r1].Cells[r2].SetColour("");
-            Columns[c1].Cells[c2].SetNumber(num);
-            Blocks[b1].Cells[b2].SetNumber(num);
-            SudokuGrid[r1, r2] = num;
-            var coordinates = getUserFriendlyCoordinates(i, j);
-            Techniques.Add("Put " + num + " in " + coordinates+ " . Technique is " + techniqueName + ".");
+            Rows[r1].Cells[r2].SetColour(colour);
+            Columns[c1].Cells[c2].SetColour(colour);
+            Blocks[b1].Cells[b2].SetColour(colour);
+        }
+        public void SetNumber(int i, int j, int num, string techniqueName)
+        {
+            
+            if(continueWithTechniques())
+            {
+                RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
+                Rows[r1].Cells[r2].SetNumber(num);
+                Rows[r1].Cells[r2].SetColour("");
+                Columns[c1].Cells[c2].SetNumber(num);
+                Blocks[b1].Cells[b2].SetNumber(num);
+                SudokuGrid[r1, r2] = num;
+                var coordinates = getUserFriendlyCoordinates(i, j);
+                Techniques.Add("Put " + num + " in " + coordinates + " . Technique is " + techniqueName + ".");
+            }
+            
         }
 
         public void ClearOriginal(int i, int j) //sets a Number
@@ -408,21 +432,41 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
 
         }
 
-        public void AddPossibility(int i, int j, int num) //Adds a Possibility to a Cell, and corresponding Rows / Blocks /Columns
+        public void AddPossibility(int i, int j, int num, string techniqueName) //Adds a Possibility to a Cell, and corresponding Rows / Blocks /Columns
         {
-            RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
-            Rows[r1].Cells[r2].AddPossibilities(num);
-            Columns[c1].Cells[c2].AddPossibilities(num);
-            Blocks[b1].Cells[b2].AddPossibilities(num);
             
-        }
-        public void RemovePossibility(int i, int j, int num) //Removes a possibility from a cell, and corresponding Rows/ Blocks / Columns
-        {
-            RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
-            Rows[r1].Cells[r2].RemovePossibilities(num);
-            Columns[c1].Cells[c2].RemovePossibilities(num);
-            Blocks[b1].Cells[b2].RemovePossibilities(num);
+            if (continueWithTechniques())
+            {
+                RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
+                Rows[r1].Cells[r2].AddPossibilities(num);
+                Columns[c1].Cells[c2].AddPossibilities(num);
+                Blocks[b1].Cells[b2].AddPossibilities(num);
+                var coordinates = getUserFriendlyCoordinates(i, j);
+                if (techniqueName != "")
+                {
+                    Techniques.Add("Add possibility " + num + " in " + coordinates + " . Technique is " + techniqueName + ".");
+                }
+                
+            }
+                
+            
 
+        }
+        public void RemovePossibility(int i, int j, int num, string techniqueName) //Removes a possibility from a cell, and corresponding Rows/ Blocks / Columns
+        {
+           
+            if (continueWithTechniques())
+            {
+                RowToCoOrdinates(i, j, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
+                Rows[r1].Cells[r2].RemovePossibilities(num);
+                Columns[c1].Cells[c2].RemovePossibilities(num);
+                Blocks[b1].Cells[b2].RemovePossibilities(num);
+                var coordinates = getUserFriendlyCoordinates(i, j);
+                if (techniqueName != "")
+                {
+                    Techniques.Add("Remove Possibility " + num + " in " + coordinates + " . Technique is " + techniqueName + ".");
+                }
+            }
 
         }
         public int GetBlockFromCoOrdinates(int x, int y)
@@ -596,7 +640,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
             answer = answer.Distinct().ToList();
             return answer;
         }
-        public void RemovePossibilitiesFromIntersectingCells() //Removes Possibilities from cells that share the same row, column or block as a cell with a number in.
+        public void RemovePossibilitiesFromIntersectingCells(string techniqueName) //Removes Possibilities from cells that share the same row, column or block as a cell with a number in.
         {
             for (int i = 0; i < 9; i++)
             {
@@ -608,22 +652,37 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
                     RemovePossibilities(intersect, currentNumber, "");
                 }
             }
-        }  
+        }
 
+        public bool continueWithTechniques()
+        {
+           
+            if (UserAttempts >= Techniques.Count || UserAttempts == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
         public void RemovePossibilities(List<string> intersect, int num, string techniqueName) //Remove Possibilities from the Coordinates sent in. COORDINATES TO BE SPLIT
         {
-            foreach (var t in intersect)
+            
+            if (continueWithTechniques())
             {
-                
-                SplitTextCoordinate(t, out var i, out var j);
-                RemovePossibility(i, j, num);
-                var coordinates = getUserFriendlyCoordinates(i, j);
-                if(techniqueName !="")
+                foreach (var t in intersect)
                 {
-                    Techniques.Add("Remove " + num + " from " + coordinates+" . Technique is " + techniqueName + ".");
+
+                    SplitTextCoordinate(t, out var i, out var j);
+                    RemovePossibility(i, j, num, techniqueName);
+                    var coordinates = getUserFriendlyCoordinates(i, j);
+                    if (techniqueName != "")
+                    {
+                        Techniques.Add("Remove " + num + " from " + coordinates + " . Technique is " + techniqueName + ".");
+                    }
+
                 }
-                
             }
+               
         }
 
         public void BlockToMain(int x, int y, out int xx, out int yy)

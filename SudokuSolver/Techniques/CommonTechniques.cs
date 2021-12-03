@@ -17,7 +17,15 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         {
             SudokuGrid = numbersIn;
             Grid = new AdvancedGrid(SudokuGrid);
-            Grid.RemovePossibilitiesFromIntersectingCells();
+            Grid.RemovePossibilitiesFromIntersectingCells("");
+        }
+
+        public Technique(int[,] numbersIn, int noAttempts) //Constructor that takes an array of Numbers and Number of Attempts
+        {
+            SudokuGrid = numbersIn;
+            Grid = new AdvancedGrid(SudokuGrid);
+            Grid.UserAttempts = noAttempts;
+            Grid.RemovePossibilitiesFromIntersectingCells("");
         }
         public Technique(AdvancedGrid gridIn) //Blank Constructor
         {

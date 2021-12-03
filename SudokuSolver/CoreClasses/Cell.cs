@@ -12,7 +12,7 @@ namespace RazorPagesSudoku.SudokuSolver.CoreClasses
         public int Number { get;  set; } //Number of the Cell
 
         [JsonProperty("Colour")]
-        public string Colour { get; private set; } //Colour of the Cell
+        public string Colour { get; private set; } = ""; //Colour of the Cell
         [JsonProperty( PropertyName ="Possibilities")]
         public List<int> Possibilities { get; private set; } //Possibilities of the Cell
          //public int[] Possibilities { get; private set; }

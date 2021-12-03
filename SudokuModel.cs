@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using System.Threading.Tasks;
 using RazorPagesSudoku.SudokuSolver.CoreClasses;
-using System.Linq;
-using AutoMapper;
-using Newtonsoft.Json;
+using RazorPagesSudoku.SudokuSolver.Techniques;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RazorPagesSudoku
 {
@@ -33,6 +32,8 @@ namespace RazorPagesSudoku
         public bool IsValid { get; set; }
 
         public bool IsTyped { get; set; }
+
+        public bool IsAppliedTechniques { get; set; }
 
         public List<string> Techniques { get; set; }
 
@@ -70,6 +71,10 @@ namespace RazorPagesSudoku
         //IsSolved
         public string SessionInfoSolved { get;  set; }
         public const string SessionKeySolved = "_IsSolved";
+
+        //IsSolved
+        public string SessionInfoTechniqueApplied { get; set; }
+        public const string SessionKeyTechniqueApplied = "_IsTechniqueApplied";
 
 
         //Grid
@@ -142,6 +147,7 @@ namespace RazorPagesSudoku
             SetSessionStringIfNull(SessionKeyIsTyped);
             SetSessionStringIfNull(SessionKeySolved);
             SetSessionStringIfNull(SessionKeyIsNumber);
+            SetSessionStringIfNull(SessionKeyTechniqueApplied);
             SessionInfoSelectedI = HttpContext.Session.GetString(SessionKeySelectedI);
             SessionInfoSelectedJ = HttpContext.Session.GetString(SessionKeySelectedJ);
             SessionInfoHighlightedCells = HttpContext.Session.GetString(SessionKeyHighlightedCells);
@@ -150,6 +156,7 @@ namespace RazorPagesSudoku
             SessionInfoIsTyped = HttpContext.Session.GetString(SessionKeyIsTyped);
             SessionInfoSolved = HttpContext.Session.GetString(SessionKeySolved);
             SessionInfoIsNumber = HttpContext.Session.GetString(SessionKeyIsNumber);
+            SessionInfoTechniqueApplied = HttpContext.Session.GetString(SessionKeyTechniqueApplied);
 
             //GetIntersectingTechniques();
         }
@@ -172,6 +179,7 @@ namespace RazorPagesSudoku
                 HttpContext.Session.SetString(SessionKeySolved, "-");
                 HttpContext.Session.SetString(SessionKeyIsMinimum, "-");
                 HttpContext.Session.SetString(SessionKeyIsNumber, "-");
+                HttpContext.Session.SetString(SessionKeyTechniqueApplied, "-");
             }
 
             else
@@ -182,6 +190,8 @@ namespace RazorPagesSudoku
                 HttpContext.Session.SetString(SessionKeyIsTyped, IsTyped.ToString());
                 HttpContext.Session.SetString(SessionKeySolved, IsSolved.ToString());
                 HttpContext.Session.SetString(SessionKeyIsMinimum, IsMinimum.ToString());
+                HttpContext.Session.SetString(SessionKeyTechniqueApplied, IsAppliedTechniques.ToString());
+
             }
             
         }
@@ -212,10 +222,10 @@ namespace RazorPagesSudoku
             {
                 SaveTypedSudoku();
             }
-            GetGridCells();
-            SerializeGrid();
+            OnGet();
             Solver s = new Solver(Grid.SudokuGrid);
             s.SolveSudoku();
+            
             Grid = s.Grid;
             IsSolved = s.IsSolved;
             IsValid = s.IsValid;
@@ -235,8 +245,7 @@ namespace RazorPagesSudoku
                 ResultInfo = "Invalid Sudoku Solve";
                 return Page();
             }
-            GetGridCells();
-            SerializeGrid();
+            OnGet();
             var example = new[,]
            {
 {7,0,9,0,3,8,6,0,0},
@@ -254,6 +263,40 @@ namespace RazorPagesSudoku
             Grid = s.Grid;
             IsSolved = s.IsSolved;
             IsValid = s.IsValid;
+            IsMinimum = s.IsMinimum;
+            Techniques = s.Grid.Techniques;
+            setSessionVariables(false);
+
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostLoadSudokuAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            GetGridCells();
+            SerializeGrid();
+            var example = new[,]
+           {
+{0,0,9,1,8,6,0,5,0},
+{5,0,0,0,7,3,8,0,0,},
+{8,6,0,9,5,0,1,3,0},
+{0,7,2,6,3,5,9,1,0 },
+{6,0,0,7,0,9,0,0,3},
+{0,9,5,8,1,2,4,7,0},
+{0,2,6,0,9,8,0,4,7},
+{0,0,3,4,6,0,0,0,5},
+{0,5,0,3,2,7,6,0,0}
+};
+            Solver s = new Solver(example);
+            AdvancedGrid g = new AdvancedGrid(example);
+            Grid = s.Grid;
+            IsSolved = s.IsSolved;
+            IsValid = g.IsValidOrIsCompleteSudoku(true);
             IsMinimum = s.IsMinimum;
             Techniques = s.Grid.Techniques;
             setSessionVariables(false);
@@ -291,8 +334,18 @@ namespace RazorPagesSudoku
                 await Task.CompletedTask;
                 return Page();
             }
-
-            ResultInfo = "I will solve the next " + CellsToSolve + "number of cells";
+            OnGet();
+            
+            AdvancedGrid g = new AdvancedGrid(Grid.SudokuGrid);
+            Solver s = new Solver(g, CellsToSolve);
+            s.SolveSudoku(CellsToSolve);
+            IsAppliedTechniques = true;
+            Grid = s.Grid;
+            IsSolved = s.IsSolved;
+            IsValid = s.IsValid;
+            IsMinimum = s.IsMinimum;
+            Techniques = s.Grid.Techniques;
+            setSessionVariables(false);
             return RedirectToPage();
         }
 
@@ -328,19 +381,6 @@ namespace RazorPagesSudoku
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostLoadSudokuAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                await Task.CompletedTask;
-                ResultInfo = "Invalid Select Cell";
-                return Page();
-            }
-            SaveTypedSudoku();
-
-            return RedirectToPage();
-        }
-
         private void SaveTypedSudoku()
         {
             GetGridCells();
@@ -361,6 +401,15 @@ namespace RazorPagesSudoku
             }
             HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
             SerializeGrid();
+        }
+        private void SaveTypedSudoku(string isTyped)
+        {
+            if(isTyped=="checked")
+            {
+                SaveTypedSudoku();
+            }
+            
+            
         }
 
         public async Task<IActionResult> OnPostHighlightPossiblityAsync(int num)
@@ -405,7 +454,6 @@ namespace RazorPagesSudoku
             return RedirectToPage();
         }
 
-
         public async Task<IActionResult> OnPostSelectNumberAsync( int num)
         {
             if (!ModelState.IsValid)
@@ -435,9 +483,7 @@ namespace RazorPagesSudoku
             // Highlight
             var iString = num.ToString();
             //var jString = j.ToString();
-            GetGridCells();
-           
-            SerializeGrid();
+            OnGet();
             if (!IsValid)
             {
                 Grid.HighlightError();
@@ -457,11 +503,9 @@ namespace RazorPagesSudoku
                 ResultInfo = "Invalid Select Number";
                 return Page();
             }
-            GetGridCells();
+            OnGet();
             var iNumber = Convert.ToInt32(SessionInfoSelectedI);
             var jjNumber = Convert.ToInt32(SessionInfoSelectedJ);
-
-            SerializeGrid();
             Grid.Rows[iNumber].Cells[jjNumber].SetColour(className);
             HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
             return RedirectToPage();
@@ -513,21 +557,20 @@ namespace RazorPagesSudoku
                 return Page();
             }
 
-            GetGridCells();
+            OnGet();
             var iNumber = Convert.ToInt32(SessionInfoSelectedI);
             var jjNumber = Convert.ToInt32(SessionInfoSelectedJ);
 
-            SerializeGrid();
             var Poss = Grid.Rows[iNumber].Cells[jjNumber].Possibilities;
             var isPoss = Poss.Any(x => x == possibility);
             if (isPoss)
             {
-                Grid.RemovePossibility(iNumber, jjNumber, possibility);
+                Grid.RemovePossibility(iNumber, jjNumber, possibility, "");
             }
             else
 
             {
-                Grid.AddPossibility(iNumber, jjNumber, possibility);
+                Grid.AddPossibility(iNumber, jjNumber, possibility, "");
             }
             
             HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
@@ -543,13 +586,11 @@ namespace RazorPagesSudoku
                 return Page();
             }
 
-            GetGridCells();
+            OnGet();
             var iNumber = Convert.ToInt32(SessionInfoSelectedI);
             var jjNumber = Convert.ToInt32(SessionInfoSelectedJ);
-
-            SerializeGrid();
             Grid = HttpContext.Session.Get<AdvancedGrid>(SessionKeySudokuGrid);
-            Grid.AddPossibility(iNumber, jjNumber, possibility);
+            Grid.AddPossibility(iNumber, jjNumber, possibility, "");
             HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
             return RedirectToPage();
         }
@@ -562,8 +603,7 @@ namespace RazorPagesSudoku
                 ResultInfo = "Invalid Select Number";
                 return Page();
             }
-            GetGridCells();
-            SerializeGrid();
+            OnGet();
             if(SessionInfoIsNumber =="False")
             {
                 HttpContext.Session.SetString(SessionKeyIsNumber, "True");
@@ -584,8 +624,7 @@ namespace RazorPagesSudoku
                 ResultInfo = "Invalid Select Number";
                 return Page();
             }
-            GetGridCells();
-            SerializeGrid();
+            OnGet();
             if (SessionInfoIsTyped == "False" || SessionInfoIsTyped =="-")
             {
                 HttpContext.Session.SetString(SessionKeyIsTyped, "True");
@@ -617,6 +656,377 @@ namespace RazorPagesSudoku
             }
         }
 
+        public async Task<IActionResult> OnPostSolveNakedSinglesAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.NakedSingleTechnique();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
 
+        public void PostApplyTechniques(Technique t)
+        {
+            IsAppliedTechniques = true;
+            Techniques = t.Grid.Techniques;
+            Grid = t.Grid;
+            IsValid = Grid.IsValidOrIsCompleteSudoku(true);
+            setSessionVariables(false);
+            HttpContext.Session.Set(SessionKeySudokuGrid, Grid);
+        }
+
+        public async Task<IActionResult> OnPostSolveHiddenSinglesAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.HiddenSingles();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveNakedPairsAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+
+            if (isTyped == "checked")
+            {
+                SaveTypedSudoku();
+            }
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.NakedPair();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveNakedQuadsAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            GetGridCells();
+            SerializeGrid();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.NakedQuad();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveHiddenQuadsAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            GetGridCells();
+            SerializeGrid();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.HiddenQuads();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveHiddenPairsAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            GetGridCells();
+            SerializeGrid();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.HiddenPairTechnique();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveRemotePairAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.RemotePairTechnique();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolvePointingAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.Claiming();//Pointing is Claiming?
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveClaimingAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.Claiming();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveDoublePairAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.DoublePair();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveMultiLineAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.MultiLine();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveXWingAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.XWing();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveXYWingAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+
+            if (isTyped == "checked")
+            {
+                SaveTypedSudoku();
+            }
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.XYWing();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveXYZWingAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.XYZWing();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveXYChainAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.XYChain();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveColouringAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.Colouring();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveNakedTriplesAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.NakedTriple();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveHiddenTriplesAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.HiddenTriples();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveSwordfishAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.Swordfish();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveNishioAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.Nishio();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveUniqueRectangleAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostSolveBruteForceAsync(string isTyped)
+        {
+            if (!ModelState.IsValid)
+            {
+                await Task.CompletedTask;
+                ResultInfo = "Invalid Sudoku Solve";
+                return Page();
+            }
+
+            SaveTypedSudoku(isTyped);
+            OnGet();
+            Technique t = new Technique(Grid.SudokuGrid);
+            t.SolveBruteForce();
+            PostApplyTechniques(t);
+            return RedirectToPage();
+        }
     }
 }

@@ -61,6 +61,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
            
             if(doesShareCommonRowOrCol)
             {
+                Console.WriteLine("REMOVE STUFF");
                 List<int> commonIndexes = new List<int>() { rowColsWithTwoPossibilitiesOfANumber[x1], rowColsWithTwoPossibilitiesOfANumber[y1] };
                 
                 var xWing = findXWing(allIndexesOfNumberInGrid, commonIndexes, name, x1);
@@ -83,8 +84,8 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                 var distinctRows=    rowIntersects.Distinct().ToList();
                 var distinctColumns = colIntersects.Distinct().ToList(); ;
 
-                Grid.RemovePossibilities(distinctRows, num, "XWing");
-                Grid.RemovePossibilities(distinctColumns, num, "XWing");
+                Grid.RemovePossibilities(distinctRows, num, "X Wing");
+                Grid.RemovePossibilities(distinctColumns, num, "X Wing");
             }
 
             

@@ -8,7 +8,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
     {
         public void HiddenSingles() //Applies the Hidden Singles Technique
         {
-             Grid.RemovePossibilitiesFromIntersectingCells();
+             Grid.RemovePossibilitiesFromIntersectingCells("");
              SetNumberIfOnePossibilityInGroup();
         }
         public bool IsHiddenSingleInGroup(Group g, int num)

@@ -29,25 +29,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/26/2021 15:17:41</publishTime>
     </File>
     <File Include="RazorPagesSudoku.deps.json">
-      <publishTime>10/13/2021 08:19:46</publishTime>
+      <publishTime>12/02/2021 16:45:58</publishTime>
     </File>
     <File Include="RazorPagesSudoku.dll">
-      <publishTime>10/13/2021 08:19:00</publishTime>
+      <publishTime>12/02/2021 16:43:47</publishTime>
     </File>
     <File Include="RazorPagesSudoku.exe">
-      <publishTime>10/13/2021 08:19:00</publishTime>
+      <publishTime>12/02/2021 16:43:49</publishTime>
     </File>
     <File Include="RazorPagesSudoku.pdb">
-      <publishTime>10/13/2021 08:19:00</publishTime>
+      <publishTime>12/02/2021 16:43:47</publishTime>
     </File>
     <File Include="RazorPagesSudoku.runtimeconfig.json">
       <publishTime>06/15/2021 15:50:06</publishTime>
     </File>
     <File Include="RazorPagesSudoku.Views.dll">
-      <publishTime>10/13/2021 08:19:46</publishTime>
+      <publishTime>12/02/2021 16:43:58</publishTime>
     </File>
     <File Include="RazorPagesSudoku.Views.pdb">
-      <publishTime>10/13/2021 08:19:46</publishTime>
+      <publishTime>12/02/2021 16:43:58</publishTime>
     </File>
     <File Include="System.Web.Helpers.dll">
       <publishTime>11/28/2018 13:04:24</publishTime>
@@ -68,16 +68,97 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/28/2018 13:04:24</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>10/13/2021 08:22:02</publishTime>
+      <publishTime>12/02/2021 16:50:53</publishTime>
     </File>
     <File Include="wwwroot/css/site.css">
-      <publishTime>09/07/2021 13:05:10</publishTime>
+      <publishTime>12/02/2021 16:35:04</publishTime>
     </File>
     <File Include="wwwroot/favicon.ico">
       <publishTime>05/06/2021 11:57:30</publishTime>
     </File>
+    <File Include="wwwroot/images/Buttons.PNG">
+      <publishTime>11/30/2021 08:45:50</publishTime>
+    </File>
+    <File Include="wwwroot/images/ClearSudoku.PNG">
+      <publishTime>11/30/2021 12:17:24</publishTime>
+    </File>
+    <File Include="wwwroot/images/ColourDropdown.jpg">
+      <publishTime>11/30/2021 08:47:57</publishTime>
+    </File>
+    <File Include="wwwroot/images/colours.PNG">
+      <publishTime>11/30/2021 08:44:14</publishTime>
+    </File>
+    <File Include="wwwroot/images/HowDidISolve.jpg">
+      <publishTime>01/12/2021 10:46:06</publishTime>
+    </File>
+    <File Include="wwwroot/images/Keyboard1.PNG">
+      <publishTime>11/30/2021 08:42:22</publishTime>
+    </File>
+    <File Include="wwwroot/images/LoadExample.PNG">
+      <publishTime>11/30/2021 12:17:38</publishTime>
+    </File>
+    <File Include="wwwroot/images/Notes.PNG">
+      <publishTime>11/30/2021 08:43:21</publishTime>
+    </File>
+    <File Include="wwwroot/images/NumberSelected.PNG">
+      <publishTime>11/30/2021 14:53:47</publishTime>
+    </File>
+    <File Include="wwwroot/images/SelectNo1.PNG">
+      <publishTime>11/30/2021 12:08:42</publishTime>
+    </File>
+    <File Include="wwwroot/images/SelectNo2.PNG">
+      <publishTime>11/30/2021 12:09:03</publishTime>
+    </File>
+    <File Include="wwwroot/images/SelectNoMain.PNG">
+      <publishTime>11/30/2021 12:39:56</publishTime>
+    </File>
+    <File Include="wwwroot/images/SelectNumber.PNG">
+      <publishTime>11/30/2021 08:42:53</publishTime>
+    </File>
+    <File Include="wwwroot/images/ShowAllPoss.PNG">
+      <publishTime>11/30/2021 12:39:35</publishTime>
+    </File>
+    <File Include="wwwroot/images/ShowAllPossEG.jpg">
+      <publishTime>01/12/2021 08:54:31</publishTime>
+    </File>
+    <File Include="wwwroot/images/Solve Example.PNG">
+      <publishTime>11/30/2021 12:16:56</publishTime>
+    </File>
+    <File Include="wwwroot/images/SolvedSudoku.jpg">
+      <publishTime>01/12/2021 09:04:28</publishTime>
+    </File>
+    <File Include="wwwroot/images/SolveNextEntries.PNG">
+      <publishTime>12/02/2021 16:07:13</publishTime>
+    </File>
+    <File Include="wwwroot/images/SolveNextEntryResults.PNG">
+      <publishTime>12/02/2021 16:07:31</publishTime>
+    </File>
+    <File Include="wwwroot/images/SolveSudoku.PNG">
+      <publishTime>11/30/2021 12:17:09</publishTime>
+    </File>
+    <File Include="wwwroot/images/SudokuShowPossibilitiesEG.jpg">
+      <publishTime>01/12/2021 09:53:22</publishTime>
+    </File>
+    <File Include="wwwroot/images/SudokuTechniquesAll.jpg">
+      <publishTime>01/12/2021 09:56:20</publishTime>
+    </File>
+    <File Include="wwwroot/images/Techniques.PNG">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="wwwroot/images/ToggleKeyboard.PNG">
+      <publishTime>11/30/2021 08:42:03</publishTime>
+    </File>
+    <File Include="wwwroot/images/ToggleOff.jpg">
+      <publishTime>01/12/2021 09:35:37</publishTime>
+    </File>
+    <File Include="wwwroot/images/ToggleOnn.jpg">
+      <publishTime>01/12/2021 09:36:40</publishTime>
+    </File>
+    <File Include="wwwroot/images/Typy.PNG">
+      <publishTime>11/30/2021 15:51:19</publishTime>
+    </File>
     <File Include="wwwroot/js/site.js">
-      <publishTime>07/09/2021 15:50:16</publishTime>
+      <publishTime>11/30/2021 15:39:54</publishTime>
     </File>
     <File Include="wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css">
       <publishTime>05/06/2021 11:57:30</publishTime>

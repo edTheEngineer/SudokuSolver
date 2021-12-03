@@ -271,7 +271,7 @@ function validateNumbers(id) {
         }
         }
 
-    IsGridValid(id)
+    IsGridValid(id);
 }
 
 function moveCoordinate(coordinate, direction) {
@@ -431,6 +431,39 @@ function findBackwardsCell(i, j) {
     };
 }
 
+function openModal() {
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    modal.style.display = "block";
+    modal.style.display = "none";
+}
+
+
+// When the user clicks anywhere outside of the modal, close it
+//window.onclick = function (event) {
+ //   if (event.target == modal) {
+ //       modal.style.display = "none";
+  //  }
+//}
+
 document.addEventListener('keydown', function (e) {
     var code = e.which || e.keyCode;
     var currentElement = document.activeElement.id;
@@ -463,4 +496,18 @@ document.addEventListener('keydown', function (e) {
     }
 
 }
-    )
+)
+
+function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}

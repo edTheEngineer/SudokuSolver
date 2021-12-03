@@ -47,6 +47,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
             return (isRow && isBlock ||isCol&&isBlock);
         } //Finds if 2 Coordinates exist on the same row or block, and same column & block
 
+
         
         private void GetIntersectingCellLists(int x1, int y1,  bool isExclude, out List<string> intersectBlocks, out List<string> intersectColumns, out List<string> intersectRows)
         {

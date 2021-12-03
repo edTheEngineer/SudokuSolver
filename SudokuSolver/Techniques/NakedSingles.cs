@@ -19,9 +19,10 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
         }
         public void NakedSingleTechnique ()// Gives Naked Singles Technique
         {
-            Grid.RemovePossibilitiesFromIntersectingCells();
+            Grid.RemovePossibilitiesFromIntersectingCells("");
             SetNumberIfCellHasOnePossibility();
         }
+
         private void SetNumberIfCellHasOnePossibility() //Sets Number in a cell if has 1 Possibility
         {
             for (int i = 0; i < GroupSize; i++)

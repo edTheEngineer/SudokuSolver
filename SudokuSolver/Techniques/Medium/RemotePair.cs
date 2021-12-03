@@ -167,8 +167,8 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                 var coordinate = x.Split(";");
                 var firstCoordinate = coordinate[0];
                 var secondCoordinate = coordinate[1];
-                Grid.RemovePossibility(Convert.ToInt32(firstCoordinate), Convert.ToInt32(secondCoordinate), num);
-                Grid.RemovePossibility(Convert.ToInt32(firstCoordinate), Convert.ToInt32(firstCoordinate), num);
+                Grid.RemovePossibility(Convert.ToInt32(firstCoordinate), Convert.ToInt32(secondCoordinate), num, "Remote Pair");
+                Grid.RemovePossibility(Convert.ToInt32(firstCoordinate), Convert.ToInt32(firstCoordinate), num, "Remote Pair");
             }
            
         }

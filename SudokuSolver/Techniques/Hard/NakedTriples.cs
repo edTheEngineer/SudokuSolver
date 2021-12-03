@@ -91,25 +91,25 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     {
                         if(name ==Grid.ROW)
                         {
-                            Grid.RemovePossibility(index, i, first);
-                            Grid.RemovePossibility(index, i, second);
-                            Grid.RemovePossibility(index, i, third);
+                            Grid.RemovePossibility(index, i, first, "Naked Triples");
+                            Grid.RemovePossibility(index, i, second, "Naked Triples");
+                            Grid.RemovePossibility(index, i, third, "Naked Triples");
                         }
 
                         if(name ==Grid.COLUMNS)
                         {
-                        Grid.RemovePossibility(i, index, first);
-                        Grid.RemovePossibility(i, index, second);
-                        Grid.RemovePossibility(i, index, third);
+                        Grid.RemovePossibility(i, index, first, "Naked Triples");
+                        Grid.RemovePossibility(i, index, second, "Naked Triples");
+                        Grid.RemovePossibility(i, index, third, "Naked Triples");
                         }
 
                         if(name ==Grid.BLOCKS)
                         {
                         Grid.BlockToCoOrdinates(index, i, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
                         //Console.WriteLine("[" + r1 + " , " + r2 + "]" + "LIST  = " + first + " " + second + " " + third);
-                        Grid.RemovePossibility(r1, r2, first);
-                        Grid.RemovePossibility(r1, r2, second);
-                        Grid.RemovePossibility(r1, r2, third);
+                        Grid.RemovePossibility(r1, r2, first, "Naked Triples");
+                        Grid.RemovePossibility(r1, r2, second, "Naked Triples");
+                        Grid.RemovePossibility(r1, r2, third, "Naked Triples");
                          }
                         
 

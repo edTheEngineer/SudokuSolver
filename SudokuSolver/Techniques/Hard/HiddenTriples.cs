@@ -51,18 +51,18 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     {
                         if (name == Grid.ROW)
                         {
-                            Grid.RemovePossibility(cellI, index, i);
+                            Grid.RemovePossibility(cellI, index, i, "Hidden Triples");
                         }
 
                         if (name == Grid.COLUMNS)
                         {
-                            Grid.RemovePossibility(index, cellI, i);
+                            Grid.RemovePossibility(index, cellI, i, "Hidden Triples");
                         }
 
                         if (name == Grid.BLOCKS)
                         {
                             Grid.BlockToCoOrdinates(cellI, index, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
-                            Grid.RemovePossibility(r1, r2, i);
+                            Grid.RemovePossibility(r1, r2, i, "Hidden Triples");
                         }
                     }
                 }

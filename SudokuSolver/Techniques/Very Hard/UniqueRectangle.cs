@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using RazorPagesSudoku.SudokuSolver.CoreClasses;
 
-namespace RazorPagesSudoku.SudokuSolver.Techniques.Very_Hard
+namespace RazorPagesSudoku.SudokuSolver.Techniques
 {
     public partial class Technique
     {
+        public void UniqueRectangle()
+        {
 
+        }
     }
 }

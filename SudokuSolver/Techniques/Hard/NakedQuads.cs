@@ -101,29 +101,29 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                     if (name == Grid.ROW)
                     {
                         //Console.WriteLine("[" + index + " , " + i + "]" + "LIST  = " + first + " " + second + " " + third +  " " + fourth);
-                        Grid.RemovePossibility(index, i, first);
-                        Grid.RemovePossibility(index, i, second);
-                        Grid.RemovePossibility(index, i, third);
-                        Grid.RemovePossibility(index, i, fourth);
+                        Grid.RemovePossibility(index, i, first, "Naked Quads");
+                        Grid.RemovePossibility(index, i, second, "Naked Quads");
+                        Grid.RemovePossibility(index, i, third, "Naked Quads");
+                        Grid.RemovePossibility(index, i, fourth, "Naked Quads");
                     }
 
                     if (name == Grid.COLUMNS)
                     {
                         //Console.WriteLine("[" + index + " , " + i + "]" + "LIST  = " + first + " " + second + " " + third + " " + fourth);
-                        Grid.RemovePossibility(i, index, first);
-                        Grid.RemovePossibility(i, index, second);
-                        Grid.RemovePossibility(i, index, third);
-                        Grid.RemovePossibility(i, index, fourth);
+                        Grid.RemovePossibility(i, index, first, "Naked Quads");
+                        Grid.RemovePossibility(i, index, second, "Naked Quads");
+                        Grid.RemovePossibility(i, index, third, "Naked Quads");
+                        Grid.RemovePossibility(i, index, fourth, "Naked Quads");
                     }
 
                     if (name == Grid.BLOCKS)
                     {
                         Grid.BlockToCoOrdinates(index, i, out int r1, out int r2, out int c1, out int c2, out int b1, out int b2);
                         //Console.WriteLine("[" + r1 + " , " + r2 + "]" + "LIST  = " + first + " " + second + " " + third + " " + fourth);
-                        Grid.RemovePossibility(r1, r2, first);
-                        Grid.RemovePossibility(r1, r2, second);
-                        Grid.RemovePossibility(r1, r2, third);
-                        Grid.RemovePossibility(r1, r2, fourth);
+                        Grid.RemovePossibility(r1, r2, first, "Naked Quads");
+                        Grid.RemovePossibility(r1, r2, second, "Naked Quads");
+                        Grid.RemovePossibility(r1, r2, third, "Naked Quads");
+                        Grid.RemovePossibility(r1, r2, fourth, "Naked Quads");
                     }
 
 

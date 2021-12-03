@@ -84,6 +84,7 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
 
         }
 
+
         public void PrintPairs(IEnumerable<HiddenPair> pairQ)
         {
             foreach(var pairs in pairQ)
@@ -150,8 +151,12 @@ namespace RazorPagesSudoku.SudokuSolver.Techniques
                         count += 1;
                     }
 
+                    
                 }
-
+                if(name==Grid.BLOCKS && i == 3 && number ==9)
+                {
+                    Console.WriteLine("count is " + count);
+                }
                 if (count == 2)
                 {
                     SetPair(name, number, i, firstIndex, i, secondIndex);

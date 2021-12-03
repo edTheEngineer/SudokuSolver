@@ -14,7 +14,7 @@
                     {
                         var number = Grid.Rows[i].Cells[j].Number;
                         Grid.SplitTextCoordinate(cell, out var a, out var b);
-                        Grid.RemovePossibility(a, b, number);
+                        Grid.RemovePossibility(a, b, number, "Pencil Marks");
                     }
                 }
             }

@@ -1,10 +1,3 @@
-C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.csprojAssemblyReference.cache
-C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.AssemblyInfoInputs.cache
-C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.AssemblyInfo.cs
-C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.csproj.CoreCompileInputs.cache
-C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.RazorAssemblyInfo.cache
-C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.RazorAssemblyInfo.cs
 C:\Users\edwar\source\repos\RazorPagesSudoku\bin\Debug\netcoreapp3.1\Pages\Web.Config
 C:\Users\edwar\source\repos\RazorPagesSudoku\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\edwar\source\repos\RazorPagesSudoku\bin\Debug\netcoreapp3.1\appsettings.json
@@ -26,6 +19,13 @@ C:\Users\edwar\source\repos\RazorPagesSudoku\bin\Debug\netcoreapp3.1\System.Web.
 C:\Users\edwar\source\repos\RazorPagesSudoku\bin\Debug\netcoreapp3.1\System.Web.WebPages.dll
 C:\Users\edwar\source\repos\RazorPagesSudoku\bin\Debug\netcoreapp3.1\Microsoft.Web.Infrastructure.dll
 C:\Users\edwar\source\repos\RazorPagesSudoku\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.csprojAssemblyReference.cache
+C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.AssemblyInfoInputs.cache
+C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.AssemblyInfo.cs
+C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.csproj.CoreCompileInputs.cache
+C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.RazorAssemblyInfo.cache
+C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.RazorAssemblyInfo.cs
 C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.TagHelpers.input.cache
 C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.TagHelpers.output.cache
 C:\Users\edwar\source\repos\RazorPagesSudoku\obj\Debug\netcoreapp3.1\RazorPagesSudoku.RazorCoreGenerate.cache
